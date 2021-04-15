@@ -1,0 +1,6 @@
+2021/04/15 17:34:06 {"callers":["/Users/ezvik/go/src/nicetry/cmd/main.go: 31 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1618479246326189000}
+2021/04/15 17:34:47 {"callers":["/Users/ezvik/go/src/nicetry/cmd/main.go: 32 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1618479287230474000}
+2021/04/15 17:35:22 {"callers":["/Users/ezvik/go/src/nicetry/cmd/main.go: 32 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1618479322341255000}
+2021/04/15 17:36:14 {"callers":["/Users/ezvik/go/src/nicetry/cmd/main.go: 32 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1618479374655910000}
+2021/04/15 17:36:36 {"callers":["/Users/ezvik/go/src/nicetry/cmd/main.go: 32 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1618479396385610000}
+2021/04/15 17:36:53 {"callers":["/Users/ezvik/go/src/nicetry/cmd/main.go: 32 main.init.0"],"level":"info","message":"eddycjy: go-programming-tour-book/blog-service","time":1618479413222089000}
