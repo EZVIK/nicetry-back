@@ -43,13 +43,11 @@ func main() {
 		WriteTimeout: global.ServerSetting.WriteTimeout,
 	}
 	app := fiber.New(fSetting)
-
 	routers.InitFiber(app)
-
 	app.Listen(":3009")
 }
 
-func setupSetting() error {
+func setupSetting()  error {
 	setting, err := setting.NewSetting()
 	if err != nil {
 		return err
@@ -82,7 +80,7 @@ func setupDBEngine() error {
 	return nil
 }
 
-func setupLogger() error {
+func setupLogger()   error {
 	global.Logger = logger.NewLogger(&lumberjack.Logger{
 		Filename: global.AppSetting.LogSavePath + "/" + global.AppSetting.LogFileName + global.AppSetting.LogFileExt,
 		MaxSize:   600,
