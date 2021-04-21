@@ -1,47 +1,79 @@
 package service
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 	"nicetry/internal/model"
-	"nicetry/internal/model/dto"
-	"nicetry/pkg/app"
-	"nicetry/pkg/e"
 )
 
+func (s *Service) Get(id uint) (model.Nice, error) {
 
+	nice, err := s.Dao.GetNice(id)
 
-func (h *Handler) Get(ctx *fiber.Ctx) error {
-	nice := model.Nice{"只需回答有或没有", "-",
-		"这是一个每周更新的人生挑战节目。由特特、文森特动物园、realEnjolras、cbvivi 共同主持。",
-		0, 0, 1, 0, nil, gorm.Model{}}
-
-	return ctx.JSON(app.NewRes(nice))
-}
-
-func (h *Handler) Update(ctx *fiber.Ctx) error {
-	id := ctx.Get("id")
-
-	return ctx.JSON(app.NewRes(id + " update."))
-}
-
-func (h *Handler) Delete(ctx *fiber.Ctx) error {
-	id := ctx.Get("id")
-
-	return ctx.JSON(app.NewRes(id + " deleted."))
-}
-
-/**
-    新增 Nice
- */
-func (h *Handler) Add(ctx *fiber.Ctx) error {
-
-	n := dto.NiceParams{}
-	err := h.BodyParse(ctx, &n)
-
-	if err != nil {
-		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
+	if err == nil && nice.ID != 0 {
+		go nice.ViewAdd(s.Dao.DB)
 	}
 
-	return ctx.JSON(app.NewRes(n))
+	return nice, err
+}
+
+func (s *Service) AddNice(Title, Desc, Content string, NiceType uint, tags []uint) (model.Nice, error) {
+
+	tx := s.Dao.BeginTx()
+	defer func() {
+		tx.Commit()
+	}()
+	nice := model.Nice{
+		Title: Title,
+		Desc: Desc,
+		Content: Content,
+		NiceType: NiceType,
+		Model: model.NewModel(),
+	}
+
+	if err := nice.Create(tx); err != nil {
+		tx.Rollback()
+		return model.Nice{}, err
+	}
+
+	nts := []model.NiceTag{}
+	for _, k := range tags {
+		nts = append(nts, model.NiceTag{TagID: k, NiceID: nice.ID})
+	}
+
+	if err := tx.Create(&nts).Error; err != nil {
+		tx.Rollback()
+		return model.Nice{}, err
+	}
+
+	return nice, nil
+}
+
+func (s *Service) LikeNice(postId, likeType, userId uint) error {
+	d := s.Dao.DB
+
+	user := model.User{ID: userId}
+	if err := user.Get(d); err != nil && user.ID != 0 {
+		return err
+	}
+
+	if likeType == 1 {
+		// nice
+		nice := model.Nice{ID: postId}
+
+		if err := nice.LikeAdd(d); err != nil {
+			return err
+		}
+
+	} else if likeType == 2 {
+		// comment
+
+		comm := model.Comment{ID: postId}
+
+		if err := comm.LikeAdd(d); err != nil {
+			return err
+		}
+	}
+
+	like := model.Like{ PostId: postId, LikeType: likeType, UserId: userId}
+
+	return like.Add(d)
 }

@@ -8,8 +8,12 @@ type NiceParams struct {
 	Content  string `validate:"required" json:"content"`
 
 	NiceType uint 	`validate:"required" json:"nice_type"`
+
+	Tags     []uint `validate:"required" json:"tags"`
 }
 
+
+// 列表
 type INiceParams struct {
 	ID       uint   `validate:"required" json:"id"`
 	NiceType uint 	`validate:"required" json:"nice_type"`

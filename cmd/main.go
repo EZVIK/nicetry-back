@@ -24,15 +24,23 @@ func init() {
 
 	fmt.Print("DBEngine Initializing...")
 	if err := setupDBEngine(); err != nil {
-		log.Fatalf("init.setupSetting err: %v", err)
+		log.Fatalf("init.DBEngine err: %v", err)
+	}
+	fmt.Println("Finished.\n")
+
+	fmt.Print("CacheEngine Initializing...")
+	if err := setupCacheEngine(); err != nil {
+		log.Fatalf("init.setupCacheEngine err: %v", err)
 	}
 	fmt.Println("Finished.\n")
 
 	fmt.Print("Logger Initializing...")
 	if err := setupLogger(); err != nil {
-		log.Fatalf("init.setupSetting err: %v", err)
+		log.Fatalf("init.setupLogger err: %v", err)
 	}
 	fmt.Println("Finished.\n")
+
+
 
 	global.Logger.Infof("%s: go-programming-tour-book/%s", "eddycjy", "blog-service")
 }
@@ -43,6 +51,7 @@ func main() {
 		WriteTimeout: global.ServerSetting.WriteTimeout,
 	}
 	app := fiber.New(fSetting)
+
 	routers.InitFiber(app)
 	app.Listen(":3009")
 }
@@ -64,6 +73,10 @@ func setupSetting()  error {
 	if err != nil {
 		return err
 	}
+	err = setting.ReadSection("Cache", &global.CacheSetting)
+	if err != nil {
+		return err
+	}
 
 	global.ServerSetting.ReadTimeout *= time.Second
 	global.ServerSetting.WriteTimeout *= time.Second
@@ -73,6 +86,16 @@ func setupSetting()  error {
 func setupDBEngine() error {
 	var err error
 	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func setupCacheEngine() error {
+	var err error
+	global.CacheEngine, err = model.NewCacheEngine(global.CacheSetting)
 	if err != nil {
 		return err
 	}

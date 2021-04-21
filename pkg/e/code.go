@@ -4,6 +4,7 @@ const (
 	SUCCESS        = 200
 	ERROR          = 500
 	INVALID_PARAMS = 400
+	//UnauthorizedTokenError      = 401
 
 	NOT_FOUND      = 404
 
@@ -18,42 +19,31 @@ const (
 	ERROR_EXPORT_TAG_FAIL = 10009
 	ERROR_IMPORT_TAG_FAIL = 10010
 
-	ERROR_NOT_EXIST_ARTICLE        = 10011
-	ERROR_CHECK_EXIST_ARTICLE_FAIL = 10012
-	ERROR_ADD_ARTICLE_FAIL         = 10013
-	ERROR_DELETE_ARTICLE_FAIL      = 10014
-	ERROR_EDIT_ARTICLE_FAIL        = 10015
-	ERROR_COUNT_ARTICLE_FAIL       = 10016
-	ERROR_GET_ARTICLES_FAIL        = 10017
-	ERROR_GET_ARTICLE_FAIL         = 10018
-	ERROR_GEN_ARTICLE_POSTER_FAIL  = 10019
+	ERROR_CREATE_FAIL     					= 20000
+	ERROR_USER_CREATE_FAIL      			=  200001
 
-	ERROR_AUTH_CHECK_TOKEN_FAIL    = 20001
-	ERROR_AUTH_CHECK_TOKEN_TIMEOUT = 20002
-	ERROR_AUTH_TOKEN               = 20003
-	ERROR_AUTH                     = 20004
-	ERROR_AUTH_REGISTER_PASSWORD   = 20005
-	ERROR_AUTH_REGISTER_FAIL	   = 20006
-
-
-	ERROR_UPLOAD_SAVE_IMAGE_FAIL    = 30001
-	ERROR_UPLOAD_CHECK_IMAGE_FAIL   = 30002
-	ERROR_UPLOAD_CHECK_IMAGE_FORMAT = 30003
-
-	ERROR_TAG_MISSING_PARAMS 		= 40001
-	ERROR_TAG_CREATED_FAILS 		= 40002
-
-	ERROR_ARTICLE_TAG_BIND_FAILS 	= 50001
+	ERROR_AUTH_CHECK_TOKEN_TIMEOUT			=  400001
+	ERROR_AUTH_CHECK_TOKEN_FAIL				=  400002
 )
 
 var (
 	Success                   = NewError(0, "成功")
-	ServerError               = NewError(10000000, "服务内部错误")
-	InvalidParams             = NewError(10000001, "入参错误")
-	NotFound                  = NewError(10000002, "找不到")
-	UnauthorizedAuthNotExist  = NewError(10000003, "鉴权失败，找不到对应的 AppKey 和 AppSecret")
-	UnauthorizedTokenError    = NewError(10000004, "鉴权失败，Token 错误")
-	UnauthorizedTokenTimeout  = NewError(10000005, "鉴权失败，Token 超时")
-	UnauthorizedTokenGenerate = NewError(10000006, "鉴权失败，Token 生成失败")
-	TooManyRequests           = NewError(10000007, "请求过多")
+	ServerError               = NewError(100000, "服务内部错误")
+	InvalidParams             = NewError(100001, "参数错误")
+	NotFound                  = NewError(100002, "找不到")
+	UnauthorizedAuthNotExist  = NewError(100003, "鉴权失败，找不到对应的 AppKey 和 AppSecret")
+	UnauthorizedTokenError    = NewError(100004, "鉴权失败，Token 错误")
+	UnauthorizedTokenTimeout  = NewError(100005, "鉴权失败，Token 超时")
+	UnauthorizedTokenGenerate = NewError(100006, "鉴权失败，Token 生成失败")
+	TooManyRequests           = NewError(100007, "请求过多")
+	BcryptPasswordError       = NewError(100008, "密码加密失败")
+	UnauthorizedFail    	  = NewError(100009, "AuthorizedFail")
+	ReferralCodeAuthError     = NewError(200001, "ReferralCodeAuthError.")
+	ReferralCodeAuthFail      = NewError(200002, "ReferralCodeAuthFail.")
+	ReferralCodeUsed      	  = NewError(200003, "ReferralCodeUsed.")
+	UserIDParseError		  = NewError(200004, "UserIDParseError.")
+
+	ERROR_UPLOAD_SAVE_IMAGE_FAIL    = NewError(300001, "ERROR_UPLOAD_SAVE_IMAGE_FAIL")
+	ERROR_UPLOAD_CHECK_IMAGE_FAIL   = NewError(300002, "ERROR_UPLOAD_CHECK_IMAGE_FAIL")
+	ERROR_UPLOAD_CHECK_IMAGE_FORMAT = NewError(300003, "ERROR_UPLOAD_CHECK_IMAGE_FORMAT")
 )

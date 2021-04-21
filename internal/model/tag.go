@@ -3,28 +3,44 @@ package model
 import "gorm.io/gorm"
 
 type Tag struct {
-	ID        uint        `gorm:"primary_key" json:"id"`
+	ID        uint 	`gorm:"primarykey"`
 
-	Name      string
+	Name      string `gorm:"varchar(50);unique" json:"name"`
 
-	gorm.Model
+	ParentId  uint
+
+	*gorm.Model
+}
+
+func (t *Tag) Get(db *gorm.DB) error {
+	return db.Model(&t).Error
+}
+
+
+func (t *Tag) Add(db *gorm.DB) error {
+	return db.Create(&t).Error
+}
+
+
+func (t *Tag) Delete(db *gorm.DB) error {
+	return db.Delete(&t).Error
+}
+
+func GetTags(db *gorm.DB, ids []uint) (t []Tag, err error) {
+
+	if err = db.Find(&t, ids).Error; err != nil {
+		return t, err
+	}
+
+	return t, nil
 }
 
 type NiceTag struct {
 	ID        uint        `gorm:"primary_key" json:"id"`
 
-	TagID     uint32 `json:"tag_id"`
+	TagID     uint `json:"tag_id"`
 
-	ArticleID uint32 `json:"article_id"`
+	NiceID 	  uint `json:"nice_id"`
 
 	*gorm.Model
-}
-
-
-func (t Tag) TableName() string {
-	return "tags"
-}
-
-func (t NiceTag) TableName() string {
-	return "nice_tags"
 }

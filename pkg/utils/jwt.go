@@ -10,11 +10,11 @@ var jwtSecret []byte
 type Claims struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	UserId   int    `json:"user_id"`
+	UserId   uint    `json:"user_id"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username, password string, userId int) (string, error) {
+func GenerateToken(username, password string, userId uint) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(24 * time.Hour)
 
@@ -47,4 +47,15 @@ func ParseToken(token string) (*Claims, error) {
 	}
 
 	return nil, err
+}
+
+func GetUserIdFromToken(token string) (userId uint) {
+
+	c, err := ParseToken(token)
+
+	if err != nil {
+	    return 0
+	}
+
+	return c.UserId
 }

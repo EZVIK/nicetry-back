@@ -15,6 +15,10 @@ type AppSettingS struct {
 	LogSavePath     string
 	LogFileName     string
 	LogFileExt      string
+	ImageFilePath   string
+	ImageMaxSize	int64
+	ImageAllowExts  []string
+	ImagePrefixUrl  string
 }
 
 type DatabaseSettingS struct {
@@ -29,6 +33,21 @@ type DatabaseSettingS struct {
 	MaxIdleConns int
 	MaxOpenConns int
 }
+
+type CacheSettingS struct {
+	DBType       string
+	UserName     string
+	Password     string
+	Host         string
+	DBName       string
+	TablePrefix  string
+	Charset      string
+	ParseTime    bool
+	MaxIdleConns int
+	MaxOpenConns int
+	UserPrefix	 string
+}
+
 
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	err := s.vp.UnmarshalKey(k, v)

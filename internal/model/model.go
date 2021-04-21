@@ -3,17 +3,30 @@ package model
 import (
 	"database/sql"
 	"fmt"
+	"github.com/go-redis/redis/v7"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
+	"nicetry/global"
 	"nicetry/pkg/setting"
 	"nicetry/pkg/utils"
 	"strconv"
 	"time"
 )
 
+type DeletedAt sql.NullTime
 
-func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*sql.DB, error){
+type Model struct {
+	ID         uint32    `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt DeletedAt  `gorm:"index"`
+	CreatedBy uint32
+	UpdatedBy uint32
+}
+
+
+func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error){
 
 	dbConfig := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		databaseSetting.UserName,
@@ -27,7 +40,7 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*sql.DB, error){
 		log.Fatalf("models.Setup err: %v", err)
 	}
 
-	if err := gormClient.AutoMigrate(Nice{}, NiceTag{}); err != nil {
+	if err := gormClient.AutoMigrate(Nice{}, NiceTag{}, Tag{}, User{}, ReferralCode{}, Comment{}, Notification{}, PointLog{}, Like{}, Tag{}); err != nil {
 		log.Fatalf("models.AutoMigrate err: %v", err)
 	}
 
@@ -37,7 +50,25 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*sql.DB, error){
 	sqlDB.SetMaxIdleConns(databaseSetting.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(databaseSetting.MaxOpenConns)
 
-	return sqlDB, nil
+	return gormClient.Debug(), nil
+}
+
+func NewCacheEngine(cacheSetting *setting.CacheSettingS) (*redis.Client, error)  {
+
+	rClient := redis.NewClient(&redis.Options{
+		Addr:     cacheSetting.Host,
+		Password: cacheSetting.Password, 		// no password set
+		DB:       0,                            // use default DB
+	})
+
+	str, err := rClient.Ping().Result()
+
+	if err != nil {
+		global.Logger.Info(str)
+		panic(err)
+	}
+
+	return rClient, nil
 }
 
 
@@ -73,8 +104,14 @@ func Paginate(page int, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-
-func NewModelTime() gorm.Model {
+func NewModel() *gorm.Model {
 	t, _ := utils.GetNowTimeCST()
-	return gorm.Model{CreatedAt: t, UpdatedAt: t}
+	return &gorm.Model{CreatedAt: t, UpdatedAt: t}
+}
+
+func IModel(id uint, createdTime, updatedTime time.Time) *gorm.Model {
+	t, _ := utils.GetNowTimeCST()
+
+	return &gorm.Model{ID: id,CreatedAt: t,UpdatedAt: t}
+
 }

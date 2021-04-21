@@ -1,20 +1,20 @@
 package upload
 
 import (
-	"Goez/pkg/config"
-	"Goez/pkg/files"
-	"Goez/pkg/utils"
 	"fmt"
-	"log"
 	"mime/multipart"
+	"nicetry/global"
+	"nicetry/pkg/files"
+	"nicetry/pkg/utils"
 	"os"
 	"path"
 	"strings"
 )
 
 func GetImageFullUrl(name string) string {
-	return config.AppSetting.ImagePrefixUrl + "/" + GetImagePath() + name
+	return global.AppSetting.ImagePrefixUrl + global.AppSetting.ImagePrefixUrl + name
 }
+
 
 func GetImageName(name string) string {
 
@@ -25,17 +25,10 @@ func GetImageName(name string) string {
 	return fileName + ext
 }
 
-func GetImagePath() string {
-	return config.AppSetting.ImageSavePath
-}
-
-func GetImageFullPath() string {
-	return config.AppSetting.RuntimeRootPath + GetImagePath()
-}
 
 func CheckImageExt(fileName string) bool {
 	ext := files.GetExt(fileName)
-	for _, allowExt := range config.AppSetting.ImageAllowExts {
+	for _, allowExt := range global.AppSetting.ImageAllowExts {
 		if strings.ToUpper(allowExt) == strings.ToUpper(ext) {
 			return true
 		}
@@ -44,15 +37,8 @@ func CheckImageExt(fileName string) bool {
 	return false
 }
 
-func CheckImageSize(f multipart.File) bool {
-	size, err := files.GetSize(f)
-	if err != nil {
-		log.Println(err)
-		//logging.Warn(err)
-		return false
-	}
-
-	return size <= config.AppSetting.ImageMaxSize
+func CheckImageSize(f *multipart.FileHeader) bool {
+	return f.Size < global.AppSetting.ImageMaxSize
 }
 
 func CheckImage(src string) error {

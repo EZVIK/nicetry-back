@@ -19,6 +19,7 @@ type app struct {
 	ImageMaxSize   int
 	ImageAllowExts []string
 	ImagePrefixUrl string
+	ImagePrefix string
 
 	ExportSavePath string
 	QrCodeSavePath string
