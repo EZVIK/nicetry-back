@@ -32,10 +32,13 @@ func InitFiber(app *fiber.App){
 	user := api.Group("user")
 	user.Post("/login", ctr.Login)
 	user.Post("/register", ctr.Register)
+	user.Post("/", ctr.GetUsers)
 
 	// Nice
 	nice := api.Group("nice")
 	nice.Get("/:id", jwt, ctr.GetNice)
+	nice.Get("/", jwt, ctr.GetNicelist)
+
 	nice.Put("/:id", jwt, ctr.UpdateNice)
 	nice.Delete("/:id", jwt, ctr.DeleteNice)
 	nice.Post("/", jwt, ctr.AddNice)

@@ -6,6 +6,7 @@ import (
 	"nicetry/pkg/app"
 	"nicetry/pkg/convert"
 	"nicetry/pkg/e"
+	"nicetry/pkg/utils"
 )
 
 func (s *Controller) GetNice(ctx *fiber.Ctx) error {
@@ -17,7 +18,7 @@ func (s *Controller) GetNice(ctx *fiber.Ctx) error {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	nice, err := s.Service.Get(id)
+	nice, err := s.Service.GetNice(id)
 	if err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
@@ -34,8 +35,13 @@ func (s *Controller) AddNice(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}
+	token := ctx.Get("token")
+	UserId := utils.GetUserIdFromToken(token)
+	if UserId == 0 {
+		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), "GetUserIdFromToken fail"))
+	}
 
-	nice, err := s.Service.AddNice(n.Title, n.Desc, n.Content, n.NiceType, n.Tags)
+	nice, err := s.Service.AddNice(n.Title, n.Desc, n.Content,UserId, n.NiceType, n.Tags)
 
 	if  err != nil {
 		return ctx.JSON(app.NewErrRes(e.ERROR_CREATE_FAIL, e.GetMsg(e.ERROR_CREATE_FAIL), err.Error()))
@@ -53,4 +59,20 @@ func (s *Controller) DeleteNice(ctx *fiber.Ctx)  error {
 	id := ctx.Get("id")
 
 	return ctx.JSON(app.NewRes(id + " deleted."))
+}
+
+func (c *Controller) GetNicelist(ctx *fiber.Ctx, ) error {
+
+	n := dto.NiceListParams{}
+
+	if err := c.BodyParse(ctx, &n); err != nil {
+		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
+	}
+
+	niceList, err := c.Service.GetNiceList("","", n.PageSize, n.PageIndex)
+	if err != nil {
+		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
+	}
+
+	return ctx.JSON(app.NewRes(niceList))
 }

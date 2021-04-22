@@ -15,15 +15,16 @@ type Nice struct {
 
 	Content 		string 			`gorm:"type:text;" json:"content"`				// 内容
 
-	View    		int64  			`gorm:"default:0;" json:"view"`					// 被查看数量
+	NiceView    	int64  			`gorm:"default:0;" json:"nice_view"`					// 被查看数量
 
-	Like    		int64  			`gorm:"default:0;" json:"like"`					// 被点赞数量
+	ThumbsUp    	int64  			`gorm:"default:0;" json:"thumbs_up"`					// 被点赞数量
 
 	UserId  		uint  			 `gorm:"index" json:"user_id"`					// 创建人
 
 	NiceType		uint 			 `gorm:"tinyint(100);" json:"nice_type"`								// 类型 0 challenge 1 happy hour
 
 	Tags    		[]Tag  			 `gorm:"many2many:nice_tags;"`
+	Comments		[]Comment		 `json:"comments"`
 
 	*gorm.Model
 
@@ -34,6 +35,7 @@ type NiceList struct {
 	Title   string `json:"title"`
 	//Avatar  string `json:"avatar"`
 	//Tags    []Tag  `json:"tags"`
+
 }
 
 func (n *Nice) TableName() string {
@@ -61,13 +63,14 @@ func (n *Nice) Get(db *gorm.DB) error {
 	return err
 }
 
-func (n *Nice) Gets(db *gorm.DB, column , value string, pageSize int, pageIndex int) (nl []NiceList, err error) {
+func (n *Nice) Gets(db *gorm.DB, column , value string, pageSize int, pageIndex int) (nl []Nice, err error) {
 
-	// db.Model(n).Scopes(Paginate(pageIndex, pageSize)).Where(column + "? = ", value)
+
 	err = db.Debug().Scopes(Paginate(pageIndex, pageSize)).Model(&Nice{}).
-		Where(column + "? = ", value).
+		//Where(column + "? = ", value).
+		Select("id, title, nice_view, thumbs_up, user_id, created_at, updated_at").
 		Scan(&nl).
-		Order("view desc").Error
+		Order("updated_at desc").Error
 
 	if err != nil {
 		return  nil, err
@@ -76,15 +79,14 @@ func (n *Nice) Gets(db *gorm.DB, column , value string, pageSize int, pageIndex 
 }
 
 func (n *Nice) ViewAdd(db *gorm.DB) error {
-	return db.Model(&Nice{}).Where("id = ?", n.ID).Update("view", gorm.Expr("view + ?", 1)).Error
+	return db.Model(&Nice{}).Where("id = ?", n.ID).Update("nice_view", gorm.Expr("nice_view + ?", 1)).Error
 }
 
 func (n *Nice) LikeAdd(db *gorm.DB) error {
-	return db.Model(&Nice{}).Where("id = ?", n.ID).Update("like", gorm.Expr("? + ?", "like",1)).Error
+	return db.Model(&Nice{}).Where("id = ?", n.ID).Update("thumbs_up", gorm.Expr("? + ?", "thumbs_up",1)).Error
 }
 
 func (n *Nice) GetComments(db *gorm.DB) (cos []Comment,err error) {
-
 	if err := db.Model(&Comment{}).Where("nice_id = ?", n.ID).Find(&cos).Error; err != nil {
 		return cos, err
 	}

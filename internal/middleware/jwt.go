@@ -14,7 +14,6 @@ func JWT() func(c *fiber.Ctx) error {
 		var code int
 
 		code = e.SUCCESS
-		//token := c.Accepts("token")
 		token := c.Get("token")
 		if token == "" {
 		code = e.INVALID_PARAMS

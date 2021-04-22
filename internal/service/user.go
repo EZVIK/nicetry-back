@@ -30,7 +30,7 @@ func (s *Service) Login(mail, password string) (string, error) {
 	}
 
 	// 保存token
-	key := fmt.Sprintf("%v:", user.ID)
+	key := fmt.Sprintf("{auth}:%v:", user.ID)
 	if err := s.Dao.Cache.Set(key, token, time.Hour * 24).Err(); err != nil {
 		return "", err
 	}
@@ -58,11 +58,26 @@ func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, 
 		return errors.New("推荐码无效")
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) 	//加密处理
+	mailCheck := model.User{
+		Mail: mail,
+	}
+
+	if err := mailCheck.Get(tx.Where("mail = ?", mail)); err != nil && err.Error() != "record not found"  {
+		tx.Rollback()
+		return 	err
+	}
+
+	if mailCheck.ID != 0 {
+		tx.Rollback()
+		return errors.New("该邮箱已被注册")
+	}
+
+	mailBcr, err := bcrypt.GenerateFromPassword([]byte(mail), bcrypt.DefaultCost) 	//加密处理
+	pass, err    := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) 	//加密处理
 	user := model.User{
 		Nickname: nickname,
-		Password: string(hash),
-		Mail: mail,
+		Password: string(pass),
+		Mail: string(mailBcr),
 		Avatar: avatar,
 		Desc: desc,
 		RecommendBy: 0,
@@ -91,4 +106,12 @@ func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, 
 	}
 
 	return nil
+}
+
+func (s *Service) GetUser(ids []uint) (us []model.User, err error){
+	if err = s.Dao.DB.Where("id IN ?", ids).Find(&us).Error; err != nil {
+		return us, err
+	}
+
+	return
 }

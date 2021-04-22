@@ -40,7 +40,7 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error){
 		log.Fatalf("models.Setup err: %v", err)
 	}
 
-	if err := gormClient.AutoMigrate(Nice{}, NiceTag{}, Tag{}, User{}, ReferralCode{}, Comment{}, Notification{}, PointLog{}, Like{}, Tag{}); err != nil {
+	if err := gormClient.AutoMigrate(Nice{}, NiceTag{}, Tag{}, User{}, ReferralCode{}, Comment{}, Notification{}, PointLog{}, ThumbsUp{}, Tag{}); err != nil {
 		log.Fatalf("models.AutoMigrate err: %v", err)
 	}
 

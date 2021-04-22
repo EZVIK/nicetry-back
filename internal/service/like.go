@@ -19,7 +19,7 @@ func (s *Service) Like(postId, likeType, userId uint) error {
 	}
 
 	// using cache check user if like this post
-	like := model.Like{ PostId: postId, LikeType: likeType, UserId: userId}
+	like := model.ThumbsUp{ PostId: postId, LikeType: likeType, UserId: userId}
 	userLikeKey := ""
 
 

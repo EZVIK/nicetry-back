@@ -4,7 +4,7 @@ import (
 	"nicetry/internal/model"
 )
 
-func (s *Service) Get(id uint) (model.Nice, error) {
+func (s *Service) GetNice(id uint) (model.Nice, error) {
 
 	nice, err := s.Dao.GetNice(id)
 
@@ -12,10 +12,28 @@ func (s *Service) Get(id uint) (model.Nice, error) {
 		go nice.ViewAdd(s.Dao.DB)
 	}
 
+	n:= model.Nice{ID: nice.ID}
+	comm, err := n.GetComments(s.Dao.DB)
+	nice.Comments = comm
 	return nice, err
 }
 
-func (s *Service) AddNice(Title, Desc, Content string, NiceType uint, tags []uint) (model.Nice, error) {
+
+func (s *Service) GetNiceList(column , value string, pageSize int, pageIndex int) (ns []model.Nice,err error) {
+
+	n := model.Nice{}
+
+	ns, err = n.Gets(s.Dao.DB, column, value, pageSize, pageIndex)
+
+	if err != nil {
+	    return ns, err
+	}
+
+
+	return
+}
+
+func (s *Service) AddNice(Title, Desc, Content string, UserId, NiceType uint, tags []uint) (model.Nice, error) {
 
 	tx := s.Dao.BeginTx()
 	defer func() {
@@ -26,6 +44,7 @@ func (s *Service) AddNice(Title, Desc, Content string, NiceType uint, tags []uin
 		Desc: Desc,
 		Content: Content,
 		NiceType: NiceType,
+		UserId: UserId,
 		Model: model.NewModel(),
 	}
 
@@ -73,7 +92,7 @@ func (s *Service) LikeNice(postId, likeType, userId uint) error {
 		}
 	}
 
-	like := model.Like{ PostId: postId, LikeType: likeType, UserId: userId}
+	like := model.ThumbsUp{ PostId: postId, LikeType: likeType, UserId: userId}
 
 	return like.Add(d)
 }

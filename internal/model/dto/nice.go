@@ -19,3 +19,9 @@ type INiceParams struct {
 	NiceType uint 	`validate:"required" json:"nice_type"`
 	Title    string `validate:"required" json:"title"`
 }
+
+
+type NiceListParams struct {
+	PageSize  	int 	`validate:"required" json:"page_size"`
+	PageIndex 	int     `validate:"required" json:"page_index"`
+}

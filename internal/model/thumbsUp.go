@@ -2,7 +2,7 @@ package model
 
 import "gorm.io/gorm"
 
-type Like struct {
+type ThumbsUp struct {
 
 	ID      		uint 			`gorm:"primarykey"`
 
@@ -15,18 +15,18 @@ type Like struct {
 	*gorm.Model
 }
 
-type ThumbsUp interface {
+type ThumbsUp_ interface {
 	LikeAdd(db *gorm.DB) error
 }
 
-func (l *Like) GetLikes()  {
+func (l *ThumbsUp) GetLikes()  {
 
 }
 
-func (l *Like) Add(db *gorm.DB) error {
+func (l *ThumbsUp) Add(db *gorm.DB) error {
 	return db.Create(&l).Error
 }
 
-func (l *Like) Delete(db *gorm.DB) error {
+func (l *ThumbsUp) Delete(db *gorm.DB) error {
 	return db.Delete(&l).Error
 }

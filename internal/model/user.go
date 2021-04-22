@@ -63,7 +63,7 @@ func (u *User) Token(r *redis.Client, token string) error {
 	return r.Set(GetCachePreName(u), token, time.Hour * 36).Err()
 }
 
-func (u *User) GetLikes(db *gorm.DB) (ls []Like, err error) {
+func (u *User) GetLikes(db *gorm.DB) (ls []ThumbsUp, err error) {
 	return nil, nil
 }
 

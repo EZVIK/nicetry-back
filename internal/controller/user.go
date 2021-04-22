@@ -40,4 +40,19 @@ func (c *Controller) Register(ctx *fiber.Ctx) error {
 	return ctx.JSON(app.NewRes("Success"))
 }
 
+func (c *Controller) GetUsers(ctx *fiber.Ctx) error {
+
+	n := dto.IUsers{}
+
+	err := c.BodyParse(ctx, &n)
+
+	if err != nil {
+		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
+	}
+
+	token, err := c.Service.GetUser(n)
+
+	return ctx.JSON(app.NewRes(token))
+}
+
 
