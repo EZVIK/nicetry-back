@@ -21,6 +21,13 @@ func (s *Service) GetNice(id uint) (model.Nice, error) {
 
 func (s *Service) GetNiceList(column , value string, pageSize int, pageIndex int) (ns []model.Nice,err error) {
 
+
+	if pageIndex == 0 {
+		pageIndex = 1
+	}
+	if pageSize == 0 {
+		pageSize = 10
+	}
 	n := model.Nice{}
 
 	ns, err = n.Gets(s.Dao.DB, column, value, pageSize, pageIndex)

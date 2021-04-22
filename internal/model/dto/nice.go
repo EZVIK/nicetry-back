@@ -22,6 +22,6 @@ type INiceParams struct {
 
 
 type NiceListParams struct {
-	PageSize  	int 	`validate:"required" json:"page_size"`
-	PageIndex 	int     `validate:"required" json:"page_index"`
+	PageSize  	int 	`json:"page_size"`
+	PageIndex 	int     `json:"page_index"`
 }
