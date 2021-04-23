@@ -72,12 +72,12 @@ func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, 
 		return errors.New("该邮箱已被注册")
 	}
 
-	mailBcr, err := bcrypt.GenerateFromPassword([]byte(mail), bcrypt.DefaultCost) 	//加密处理
+	//mailBcr, err := bcrypt.GenerateFromPassword([]byte(mail), bcrypt.DefaultCost) 	//加密处理
 	pass, err    := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) 	//加密处理
 	user := model.User{
 		Nickname: nickname,
 		Password: string(pass),
-		Mail: string(mailBcr),
+		Mail: mail,
 		Avatar: avatar,
 		Desc: desc,
 		RecommendBy: 0,
