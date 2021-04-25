@@ -53,7 +53,7 @@ func main() {
 	app := fiber.New(fSetting)
 
 	routers.InitFiber(app)
-	app.Listen(":3009")
+	app.Listen(":6709")
 }
 
 func setupSetting()  error {
