@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"go.uber.org/ratelimit"
 	"nicetry/global"
 	"nicetry/internal/controller"
 	"nicetry/internal/middleware"
@@ -12,8 +13,10 @@ func InitFiber(app *fiber.App){
 
 	ctr := controller.New()
 
-	//app.Use(middleware.CORS)
 	jwt := middleware.JWT()
+
+	limiter := middleware.Limiter{RL: ratelimit.New(200)}     // request per second
+
 
 	// 图片访问
 	app.Static("/i", global.AppSetting.ImageFilePath, fiber.Static{
@@ -26,6 +29,9 @@ func InitFiber(app *fiber.App){
 	})
 
 	api := app.Group("/api/v1")
+
+	api.Use(limiter.Take())
+
 	api.Post("/upload", ctr.UploadImage)
 
 	// User
@@ -38,7 +44,6 @@ func InitFiber(app *fiber.App){
 	nice := api.Group("nice")
 	nice.Get("/:id", jwt, ctr.GetNice)
 	nice.Get("/", jwt, ctr.GetNicelist)
-
 	nice.Put("/:id", jwt, ctr.UpdateNice)
 	nice.Delete("/:id", jwt, ctr.DeleteNice)
 	nice.Post("/", jwt, ctr.AddNice)

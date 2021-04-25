@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"nicetry/internal/model"
 )
 
@@ -17,7 +18,6 @@ func (s *Service) GetNice(id uint) (model.Nice, error) {
 	nice.Comments = comm
 	return nice, err
 }
-
 
 func (s *Service) GetNiceList(column , value string, pageSize int, pageIndex int) (ns []model.Nice,err error) {
 
@@ -46,6 +46,16 @@ func (s *Service) AddNice(Title, Desc, Content string, UserId, NiceType uint, ta
 	defer func() {
 		tx.Commit()
 	}()
+
+	nice_check := model.Nice{
+		Title: Title,
+	}
+	if err :=nice_check.Get(tx); err != nil{
+		return model.Nice{}, err
+	} else if nice_check.ID != 0 {
+		return model.Nice{}, errors.New("标题该已存在")
+	}
+
 	nice := model.Nice{
 		Title: Title,
 		Desc: Desc,

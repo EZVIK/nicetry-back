@@ -10,7 +10,6 @@ import (
 )
 
 type User struct {
-
 	ID        			uint 		`gorm:"primarykey"`
 	Nickname  			string 		`gorm:"varchar;" json:"nickname"`
 	Mail 				string 		`gorm:"varchar;unique" json:"mail"`
@@ -89,4 +88,17 @@ func (u *User) CreateReferCode(db *gorm.DB) error {
 	}
 
 	return err
+}
+
+
+
+type LoginLog struct {
+	ID        			uint 	    `gorm:"primarykey"`
+
+	UserId				uint        `json:"user_id"`
+
+
+
+	*gorm.Model
+
 }

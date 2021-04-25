@@ -23,6 +23,8 @@ const (
 	LevelPanic
 )
 
+var LogMod = "DEBUG"
+
 func (l Level) String() string {
 	switch l {
 	case LevelDebug:
@@ -48,7 +50,8 @@ type Logger struct {
 	callers   []string
 }
 
-func NewLogger(w io.Writer, prefix string, flag int) *Logger {
+func NewLogger(w io.Writer, prefix string, flag int, mod string) *Logger {
+	LogMod = mod
 	l := log.New(w, prefix, flag)
 	return &Logger{newLogger: l}
 }
@@ -124,6 +127,10 @@ func (l *Logger) JSONFormat(level Level, message string) map[string]interface{} 
 func (l *Logger) Output(level Level, message string) {
 	body, _ := json.Marshal(l.JSONFormat(level, message))
 	content := string(body)
+	if LogMod == "DEBUG" {
+		fmt.Println(time.Now().Format("2006-01-02 15:04:05"), content)
+	}
+
 	switch level {
 	case LevelDebug:
 		l.newLogger.Print(content)

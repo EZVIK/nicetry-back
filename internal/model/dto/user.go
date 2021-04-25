@@ -13,5 +13,7 @@ type RegisterParams struct {
 	ReferralCode		string		`validate:"required" json:"referral_code"`
 }
 
-type IUsers []uint
+type IUsers struct {
+	Ids			[]uint		`validate:"required" json:"ids"`
+}
 

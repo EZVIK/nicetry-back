@@ -43,7 +43,12 @@ var (
 	ReferralCodeUsed      	  = NewError(200003, "ReferralCodeUsed.")
 	UserIDParseError		  = NewError(200004, "UserIDParseError.")
 
+	ERROR_GET_USER_FAIL      = NewError(200005, "获取用户数据失败")
+
 	ERROR_UPLOAD_SAVE_IMAGE_FAIL    = NewError(300001, "ERROR_UPLOAD_SAVE_IMAGE_FAIL")
 	ERROR_UPLOAD_CHECK_IMAGE_FAIL   = NewError(300002, "ERROR_UPLOAD_CHECK_IMAGE_FAIL")
 	ERROR_UPLOAD_CHECK_IMAGE_FORMAT = NewError(300003, "ERROR_UPLOAD_CHECK_IMAGE_FORMAT")
+
+
+
 )
