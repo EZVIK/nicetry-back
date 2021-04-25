@@ -35,14 +35,11 @@ func init() {
 	fmt.Println("Finished.\n")
 
 	fmt.Print("Logger Initializing...")
-	if err := setupLogger(); err != nil {
+	if err := setupLogger("DEBUG"); err != nil {
 		log.Fatalf("init.setupLogger err: %v", err)
 	}
 	fmt.Println("Finished.\n")
-
-
-
-	global.Logger.Infof("%s: go-programming-tour-book/%s", "eddycjy", "blog-service")
+	global.Logger.Infof("%s: nicetry/%s", "ezvik", "blog-service")
 }
 
 func main() {
@@ -103,13 +100,14 @@ func setupCacheEngine() error {
 	return nil
 }
 
-func setupLogger()   error {
+func setupLogger(mode string)   error {
+	day := time.Now().Format("2006_01_02_15")
 	global.Logger = logger.NewLogger(&lumberjack.Logger{
-		Filename: global.AppSetting.LogSavePath + "/" + global.AppSetting.LogFileName + global.AppSetting.LogFileExt,
+		Filename: global.AppSetting.LogSavePath + "/" + day + global.AppSetting.LogFileExt,
 		MaxSize:   600,
 		MaxAge:    10,
 		LocalTime: true,
-	}, "", log.LstdFlags).WithCaller(2)
+	}, "", log.LstdFlags, mode).WithCaller(2)
 
 	return nil
 }

@@ -65,7 +65,6 @@ func (n *Nice) Get(db *gorm.DB) error {
 
 func (n *Nice) Gets(db *gorm.DB, column , value string, pageSize int, pageIndex int) (nl []Nice, err error) {
 
-
 	err = db.Debug().Scopes(Paginate(pageIndex, pageSize)).Model(&Nice{}).
 		//Where(column + "? = ", value).
 		Select("id, title, nice_view, thumbs_up, user_id, created_at, updated_at").
