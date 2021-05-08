@@ -16,9 +16,10 @@ type AppSettingS struct {
 	LogFileName     string
 	LogFileExt      string
 	ImageFilePath   string
-	ImageMaxSize	int64
+	ImageMaxSize    int64
 	ImageAllowExts  []string
 	ImagePrefixUrl  string
+	IfCheckLike     bool
 }
 
 type DatabaseSettingS struct {
@@ -45,9 +46,8 @@ type CacheSettingS struct {
 	ParseTime    bool
 	MaxIdleConns int
 	MaxOpenConns int
-	UserPrefix	 string
+	UserPrefix   string
 }
-
 
 func (s *Setting) ReadSection(k string, v interface{}) error {
 	err := s.vp.UnmarshalKey(k, v)

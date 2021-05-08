@@ -10,24 +10,25 @@ import (
 func (c *Controller) Login(ctx *fiber.Ctx) error {
 
 	n := dto.LoginParams{}
-	if err := c.BodyParse(ctx, &n);err != nil {
+	if err := c.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	token, err := c.Service.Login(n.Mail, n.Password)
+	user, token, err := c.Service.Login(n.Mail, n.Password)
 
 	if err != nil || token == "" {
 		return ctx.JSON(app.NewErr(e.UnauthorizedFail))
 	}
 
-	return ctx.JSON(app.NewRes(token))
+	retData := make(map[string]interface{})
+	retData["userInfo"] = user
+	retData["jwt"] = token
+	return ctx.JSON(app.NewRes(retData))
 }
-
 
 func (c *Controller) Register(ctx *fiber.Ctx) error {
 
 	n := dto.RegisterParams{}
-
 
 	if err := c.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
@@ -55,5 +56,3 @@ func (c *Controller) GetUsers(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(app.NewRes(user))
 }
-
-

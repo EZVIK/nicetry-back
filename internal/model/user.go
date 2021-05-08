@@ -9,24 +9,39 @@ import (
 	"time"
 )
 
+type IUser struct {
+	ID       uint   `gorm:"primarykey"`
+	Mail     string `gorm:"varchar;unique" json:"mail"`
+	Nickname string `gorm:"varchar;" json:"nickname"`
+	Avatar   string `gorm:"varchar;" json:"avatar"`
+}
+
 type User struct {
-	ID        			uint 		`gorm:"primarykey"`
-	Nickname  			string 		`gorm:"varchar;" json:"nickname"`
-	Mail 				string 		`gorm:"varchar;unique" json:"mail"`
-	Password     		string 		`gorm:"varchar;" json:"password"`
-	Avatar              string 		`gorm:"varchar;" json:"avatar"`
-	Desc 				string 		`gorm:"varchar;" json:"desc"`
-	RecommendBy  		uint 		`json:"recommend_by"`
-	Link 				string 		`gorm:"varchar;" json:"link"`
-	Points 				float64 	`gorm:"default:0.0" json:"points"`
+	ID           uint    `gorm:"primarykey"`
+	Nickname     string  `gorm:"varchar;" json:"nickname"`
+	Mail         string  `gorm:"varchar;unique" json:"mail"`
+	Password     string  `gorm:"varchar;" json:"password"`
+	Avatar       string  `gorm:"varchar;" json:"avatar"`
+	Desc         string  `gorm:"varchar;" json:"desc"`
+	RecommendBy  uint    `json:"recommend_by"`
+	Link         string  `gorm:"varchar;" json:"link"`
+	Points       float64 `gorm:"default:0.0" json:"points"`
+	EnableStatus bool    `gorm:"default:false" json:"enable_status"`
 	*gorm.Model
+}
+
+func (IUser) TableName() string {
+	return "users"
+}
+func (User) TableName() string {
+	return "users"
 }
 
 func (u *User) GetCachePrefix() string {
 	return fmt.Sprintf("user: %v", u.ID)
 }
 
-func (u *User) Create(db *gorm.DB,) error {
+func (u *User) Create(db *gorm.DB) error {
 	return db.Create(&u).Error
 }
 
@@ -34,16 +49,16 @@ func (u *User) Update(db *gorm.DB) error {
 	return db.Updates(&u).Error
 }
 
-func (u *User) Delete(db *gorm.DB,) error {
+func (u *User) Delete(db *gorm.DB) error {
 	return db.Delete(&u).Error
 }
 
-func (u *User) Get(db *gorm.DB) (error) {
+func (u *User) Get(db *gorm.DB) error {
 	return db.Debug().First(&u).Error
 }
 
-func (u *User) Login(db *gorm.DB) (error) {
-	return db.Where( "mail = ? ", u.Mail).Find(&u).Error
+func (u *User) Login(db *gorm.DB) error {
+	return db.Where("mail = ? ", u.Mail).Find(&u).Error
 }
 
 func (u *User) CheckColumn(db *gorm.DB, columnName, value string) (c int64, err error) {
@@ -51,22 +66,21 @@ func (u *User) CheckColumn(db *gorm.DB, columnName, value string) (c int64, err 
 	err = db.Debug().Model(&User{}).Where("(?) = ?", columnName, value).Count(&c).Error
 	//err = db.Debug().Model(&User{}).QueryFields()
 
-
 	if err != nil {
 		return 0, err
 	}
-	return  c, nil
+	return c, nil
 }
 
 func (u *User) Token(r *redis.Client, token string) error {
-	return r.Set(GetCachePreName(u), token, time.Hour * 36).Err()
+	return r.Set(GetCachePreName(u), token, time.Hour*36).Err()
 }
 
 func (u *User) GetLikes(db *gorm.DB) (ls []ThumbsUp, err error) {
 	return nil, nil
 }
 
-func (u *User) GetPoints(db *gorm.DB) (p int64, err error){
+func (u *User) GetPoints(db *gorm.DB) (p int64, err error) {
 	return 0, nil
 }
 
@@ -90,15 +104,10 @@ func (u *User) CreateReferCode(db *gorm.DB) error {
 	return err
 }
 
-
-
 type LoginLog struct {
-	ID        			uint 	    `gorm:"primarykey"`
+	ID uint `gorm:"primarykey"`
 
-	UserId				uint        `json:"user_id"`
-
-
+	UserId uint `json:"user_id"`
 
 	*gorm.Model
-
 }

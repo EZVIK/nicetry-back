@@ -26,7 +26,7 @@ func (s *Controller) Like(ctx *fiber.Ctx) error {
 
 	err = s.Service.Like(n.PostId, n.LikeType, userId)
 
-	if  err != nil {
+	if err != nil {
 		return ctx.JSON(app.NewErrRes(e.ERROR_CREATE_FAIL, e.GetMsg(e.ERROR_CREATE_FAIL), err.Error()))
 	}
 

@@ -9,37 +9,41 @@ import (
 	"time"
 )
 
-func (s *Service) Login(mail, password string) (string, error) {
+type UserAuthParams struct {
+}
+
+func (s *Service) Login(mail, password string) (model.User, string, error) {
 
 	// 查询用户信息
 	user := model.User{Mail: mail, Password: password}
 	if err := user.Login(s.Dao.DB); err != nil {
-		return "", err
+		return user, "", err
 	}
 
 	// 验证密码
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
-		return "", errors.New("密码有误")
+		return user, "", errors.New("密码有误")
 	}
 
 	// 生成token
 	token, err := utils.GenerateToken(mail, user.Password, user.ID)
 	if err != nil {
-		return "", err
+		return user, "", err
 	}
 
 	// 保存token
-	key := fmt.Sprintf("{auth}:%v:", user.ID)
-	if err := s.Dao.Cache.Set(key, token, time.Hour * 24).Err(); err != nil {
-		return "", err
+	key := fmt.Sprintf("{USER_AUTH}:%v:", user.ID)
+	if err := s.Dao.Cache.Set(key, token, time.Hour*24).Err(); err != nil {
+		return user, "", err
 	}
 
-	return token, nil
+	user.Password = ""
+
+	return user, token, nil
 }
 
-
-func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, desc string) error {
+func (s *Service) Register(referralCode, nickname, password, mail, avatar, link, desc string) error {
 
 	// 开启事务
 	tx := s.Dao.BeginTx()
@@ -62,9 +66,9 @@ func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, 
 		Mail: mail,
 	}
 
-	if err := mailCheck.Get(tx.Where("mail = ?", mail)); err != nil && err.Error() != "record not found"  {
+	if err := mailCheck.Get(tx.Where("mail = ?", mail)); err != nil && err.Error() != "record not found" {
 		tx.Rollback()
-		return 	err
+		return err
 	}
 
 	if mailCheck.ID != 0 {
@@ -73,19 +77,20 @@ func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, 
 	}
 
 	//mailBcr, err := bcrypt.GenerateFromPassword([]byte(mail), bcrypt.DefaultCost) 	//加密处理
-	pass, err    := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) 	//加密处理
+	pass, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) //加密处理
 	user := model.User{
-		Nickname: nickname,
-		Password: string(pass),
-		Mail: mail,
-		Avatar: avatar,
-		Desc: desc,
-		RecommendBy: 0,
-		Link: link,
-		Points: 0.0,
+		Nickname:     nickname,
+		Password:     string(pass),
+		Mail:         mail,
+		Avatar:       avatar,
+		Desc:         desc,
+		RecommendBy:  0,
+		Link:         link,
+		Points:       0.0,
+		EnableStatus: false,
 	}
 
-	err = user.Create(tx)		// 注册用户
+	err = user.Create(tx) // 注册用户
 
 	if err != nil {
 		tx.Rollback()
@@ -100,18 +105,28 @@ func (s *Service) Register(referralCode,nickname, password, mail, avatar, link, 
 		return errors.New("推荐码绑定用户失败")
 	}
 
+	rc.Code = referralCode
+
+	if err := rc.Get(tx); err != nil {
+		return err
+	}
+
+	user.RecommendBy = rc.From
+	if err := user.Update(tx); err != nil {
+		return err
+	}
+
 	// 异步添加
-	for i:=0;i<2;i++ {
+	for i := 0; i < 2; i++ {
 		go user.CreateReferCode(s.Dao.DB)
 	}
 
 	return nil
 }
 
-func (s *Service) GetUser(ids []uint) (us []model.User, err error){
-	if err = s.Dao.DB.Where("id IN ?", ids).Find(&us).Error; err != nil {
+func (s *Service) GetUser(ids []uint) (us []model.User, err error) {
+	if err = s.Dao.DB.Select("id, nickname, mail, avatar, ?, link, points, created_at, updated_at", "desc").Where("id IN ?", ids).Find(&us).Error; err != nil {
 		return us, err
 	}
-
 	return
 }

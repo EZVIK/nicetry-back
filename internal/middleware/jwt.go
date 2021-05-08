@@ -16,15 +16,15 @@ func JWT() func(c *fiber.Ctx) error {
 		code = e.SUCCESS
 		token := c.Get("token")
 		if token == "" {
-		code = e.INVALID_PARAMS
+			code = e.INVALID_PARAMS
 		} else {
 			_, err := utils.ParseToken(token)
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
-					case jwt.ValidationErrorExpired:
-						code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
-					default:
-						code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
+				case jwt.ValidationErrorExpired:
+					code = e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT
+				default:
+					code = e.ERROR_AUTH_CHECK_TOKEN_FAIL
 				}
 			}
 		}

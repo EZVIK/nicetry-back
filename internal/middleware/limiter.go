@@ -3,7 +3,6 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/ratelimit"
-	"nicetry/global"
 	"time"
 )
 
@@ -23,7 +22,8 @@ func (l *Limiter) Take() func(ctx *fiber.Ctx) error {
 		} else {
 			ip = ctx.IP()
 		}
-		global.Logger.Info("Request IP:", ip)
+		//global.Logger.Info("Request IP:", ip)
+		_ = len(ip)
 		l.SetPrevTime(l.RL.Take())
 		ctx.Next()
 		return nil

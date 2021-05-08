@@ -12,9 +12,8 @@ import (
 )
 
 func GetImageFullUrl(name string) string {
-	return global.AppSetting.ImagePrefixUrl + global.AppSetting.ImagePrefixUrl + name
+	return global.AppSetting.ImagePrefixUrl + name
 }
-
 
 func GetImageName(name string) string {
 
@@ -23,8 +22,8 @@ func GetImageName(name string) string {
 	fileName = utils.Md5Crypt(fileName, utils.Upper(4))
 
 	return fileName + ext
+	//return fileName
 }
-
 
 func CheckImageExt(fileName string) bool {
 	ext := files.GetExt(fileName)

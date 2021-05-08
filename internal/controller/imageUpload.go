@@ -23,17 +23,19 @@ func (s *Controller) UploadImage(c *fiber.Ctx) error {
 	if err != nil {
 		global.Logger.Infof("c.Request.FormFile: ", err)
 		code = e.ERROR
-		c.JSON(app.NewErrRes(code, e.GetMsg(code), ""))
+		return c.JSON(app.NewErrRes(code, err.Error(), ""))
+
 	}
 
 	if image == nil {
 		code = e.INVALID_PARAMS
 	} else {
+
 		imageName := upload.GetImageName(image.Filename)
 		fullPath := global.AppSetting.ImageFilePath
 
 		src := fullPath + imageName
-		if ! upload.CheckImageExt(imageName) || image.Size > global.AppSetting.ImageMaxSize {
+		if !upload.CheckImageExt(imageName) || image.Size > global.AppSetting.ImageMaxSize {
 			code = e.ERROR_UPLOAD_CHECK_IMAGE_FORMAT.Code()
 		} else {
 			err := upload.CheckImage(fullPath)
@@ -45,11 +47,10 @@ func (s *Controller) UploadImage(c *fiber.Ctx) error {
 				code = e.ERROR_UPLOAD_SAVE_IMAGE_FAIL.Code()
 			} else {
 				data["image_url"] = upload.GetImageFullUrl(imageName)
-				//data["image_save_url"] = fullPath + imageName
+				data["image_save_url"] = fullPath + imageName
 			}
 		}
 	}
 
-	c.JSON(app.NewRes(data))
-	return nil
+	return c.JSON(app.NewRes(data))
 }

@@ -15,22 +15,19 @@ type Controller struct {
 }
 
 func New() *Controller {
-
 	svc := service.Service{}
 	svc.Dao = dao.New(global.DBEngine, global.CacheEngine)
-
 	ctrl := Controller{
-		Service: &svc,
+		Service:  &svc,
 		Validate: validator.New(),
 	}
-
 	return &ctrl
 }
 
 /***
 dto 参数解析
 */
-func (s *Controller) BodyParse(ctx *fiber.Ctx, dto interface{}) (error) {
+func (s *Controller) BodyParse(ctx *fiber.Ctx, dto interface{}) error {
 	_ = ctx.BodyParser(dto)                 // 解析参数
 	validateError := s.Validate.Struct(dto) // 校验参数
 	if validateError != nil {
@@ -42,11 +39,9 @@ func (s *Controller) BodyParse(ctx *fiber.Ctx, dto interface{}) (error) {
 
 func (c *Controller) GetParamUint(ctx *fiber.Ctx, key string) (uint, error) {
 	str := convert.StrTo(ctx.Params(key))
-	id,err := str.UInt()
+	id, err := str.UInt()
 	if err != nil {
 		return 0, err
 	}
 	return id, nil
 }
-
-

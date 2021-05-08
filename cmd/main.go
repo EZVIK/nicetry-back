@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// 组建初始化
 func init() {
 	log.Println("Initializing...\n")
 
@@ -39,21 +40,21 @@ func init() {
 		log.Fatalf("init.setupLogger err: %v", err)
 	}
 	fmt.Println("Finished.\n")
-	global.Logger.Infof("%s: nicetry/%s", "ezvik", "blog-service")
+	//global.Logger.Infof("%s: nicetry/%s", "ezvik", "blog-service")
 }
 
 func main() {
 	fSetting := fiber.Config{
-		ReadTimeout: global.ServerSetting.ReadTimeout,
+		ReadTimeout:  global.ServerSetting.ReadTimeout,
 		WriteTimeout: global.ServerSetting.WriteTimeout,
 	}
 	app := fiber.New(fSetting)
 
 	routers.InitFiber(app)
-	app.Listen(":3009")
+	app.Listen(":6079")
 }
 
-func setupSetting()  error {
+func setupSetting() error {
 	setting, err := setting.NewSetting()
 	if err != nil {
 		return err
@@ -100,10 +101,10 @@ func setupCacheEngine() error {
 	return nil
 }
 
-func setupLogger(mode string)   error {
+func setupLogger(mode string) error {
 	day := time.Now().Format("2006_01_02_15")
 	global.Logger = logger.NewLogger(&lumberjack.Logger{
-		Filename: global.AppSetting.LogSavePath + "/" + day + global.AppSetting.LogFileExt,
+		Filename:  global.AppSetting.LogSavePath + "/" + day + global.AppSetting.LogFileExt,
 		MaxSize:   600,
 		MaxAge:    10,
 		LocalTime: true,

@@ -8,9 +8,9 @@ import (
 var jwtSecret []byte
 
 type Claims struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	UserId   uint    `json:"user_id"`
+	//Username string `json:"username"`
+	//Password string `json:"password"`
+	UserId uint `json:"user_id"`
 	jwt.StandardClaims
 }
 
@@ -19,8 +19,8 @@ func GenerateToken(username, password string, userId uint) (string, error) {
 	expireTime := nowTime.Add(24 * time.Hour)
 
 	claims := Claims{
-		EncodeMD5(username),
-		EncodeMD5(password),
+		//EncodeMD5(username),
+		//EncodeMD5(password),
 		userId,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
@@ -54,7 +54,7 @@ func GetUserIdFromToken(token string) (userId uint) {
 	c, err := ParseToken(token)
 
 	if err != nil {
-	    return 0
+		return 0
 	}
 
 	return c.UserId
