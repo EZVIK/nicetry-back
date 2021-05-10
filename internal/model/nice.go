@@ -45,12 +45,18 @@ type NiceList struct {
 	UserId   uint   `json:"user_id"`
 }
 
+type NodeType struct {
+	ID   uint `gorm:"primarykey"`
+	Name string
+	*gorm.Model
+}
+
 func (n *Nice) TableName() string {
 	return "nice"
 }
 
 func (n *Nice) LikeAdd(db *gorm.DB) error {
-	return db.Model(&Nice{}).Where("id = ?", n.ID).Update("thumbs_up", gorm.Expr("? + ?", "thumbs_up", 1)).Error
+	return db.Model(&Nice{}).Where("id = ?", n.ID).Update("thumbs_up", gorm.Expr("thumbs_up + ?", 1)).Error
 }
 
 func (n *Nice) Create(db *gorm.DB) error {
