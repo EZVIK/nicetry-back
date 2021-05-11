@@ -32,7 +32,7 @@ func InitFiber(app *fiber.App) {
 	api := app.Group("/api/v1")
 
 	//api.Use(limiter.Take())
-	app.Use(middleware.CORS)
+	app.Use(middleware.CORS())
 
 	app.Use(middleware.NewRecover())
 
