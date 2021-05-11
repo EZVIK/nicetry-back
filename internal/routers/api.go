@@ -2,7 +2,6 @@ package routers
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"go.uber.org/ratelimit"
 	"nicetry/global"
 	"nicetry/internal/controller"
@@ -33,7 +32,7 @@ func InitFiber(app *fiber.App) {
 	api := app.Group("/api/v1")
 
 	//api.Use(limiter.Take())
-	app.Use(cors.New())
+	app.Use(middleware.CORS)
 
 	app.Use(middleware.NewRecover())
 
