@@ -2,10 +2,9 @@ package service
 
 import "nicetry/internal/model"
 
-func (s *Service) AddComment(niceId,userid uint,  content string) error {
-
+func (s *Service) AddComment(niceId, userid uint, content string) error {
 	d := s.Dao.DB
-	comm := model.Comment{NiceId: niceId, UserId:  userid, Content: content}
+	comm := model.Comment{NiceId: niceId, UserId: userid, Content: content}
 	return comm.Add(d)
 }
 

@@ -12,7 +12,7 @@ import (
 func (c *Controller) GetComments(ctx *fiber.Ctx) error {
 	str := convert.StrTo(ctx.Params("id"))
 
-	id,err := str.UInt()
+	id, err := str.UInt()
 
 	if err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
@@ -21,13 +21,13 @@ func (c *Controller) GetComments(ctx *fiber.Ctx) error {
 	comments, err := c.Service.GetComments(id)
 
 	if err != nil {
-	    return err
+		return err
 	}
 
 	return ctx.JSON(app.NewRes(comments))
 }
 
-func (c *Controller) AddComment(ctx *fiber.Ctx)  error {
+func (c *Controller) AddComment(ctx *fiber.Ctx) error {
 	n := dto.CommentAddParams{}
 
 	err := c.BodyParse(ctx, &n)
@@ -35,12 +35,8 @@ func (c *Controller) AddComment(ctx *fiber.Ctx)  error {
 	if err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}
-	token := ctx.Get("token")
-	if token == "" {
-		return ctx.JSON(app.NewErr(e.UserIDParseError))
-	}
 
-	userId := utils.GetUserIdFromToken(token)
+	userId := utils.GetUserIdFromToken(ctx)
 
 	err = c.Service.AddComment(n.NiceId, userId, n.Content)
 

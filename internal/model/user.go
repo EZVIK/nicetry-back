@@ -9,6 +9,12 @@ import (
 	"time"
 )
 
+type LoginLog struct {
+	ID     uint `gorm:"primarykey"`
+	UserId uint `json:"user_id"`
+	*gorm.Model
+}
+
 type IUser struct {
 	ID       uint   `gorm:"primarykey"`
 	Mail     string `gorm:"varchar;unique" json:"mail"`
@@ -41,10 +47,12 @@ func (u *User) GetCachePrefix() string {
 	return fmt.Sprintf("user: %v", u.ID)
 }
 
+// create
 func (u *User) Create(db *gorm.DB) error {
 	return db.Create(&u).Error
 }
 
+// update
 func (u *User) Update(db *gorm.DB) error {
 	return db.Updates(&u).Error
 }
@@ -57,12 +65,13 @@ func (u *User) Get(db *gorm.DB) error {
 	return db.Debug().First(&u).Error
 }
 
+// login
 func (u *User) Login(db *gorm.DB) error {
 	return db.Where("mail = ? ", u.Mail).Find(&u).Error
 }
 
+//
 func (u *User) CheckColumn(db *gorm.DB, columnName, value string) (c int64, err error) {
-
 	err = db.Debug().Model(&User{}).Where("(?) = ?", columnName, value).Count(&c).Error
 	//err = db.Debug().Model(&User{}).QueryFields()
 
@@ -72,23 +81,28 @@ func (u *User) CheckColumn(db *gorm.DB, columnName, value string) (c int64, err 
 	return c, nil
 }
 
+//
 func (u *User) Token(r *redis.Client, token string) error {
 	return r.Set(GetCachePreName(u), token, time.Hour*36).Err()
 }
 
+// get likes record
 func (u *User) GetLikes(db *gorm.DB) (ls []ThumbsUp, err error) {
 	return nil, nil
 }
 
+// get points record
 func (u *User) GetPoints(db *gorm.DB) (p int64, err error) {
 	return 0, nil
 }
 
-func (u *User) GetReferCodes(db *gorm.DB) (codes ReferralCode, err error) {
-	err = db.Debug().Model(&ReferralCode{}).Where("from = ?", u.ID).Find(&codes).Error
+// get referral_code list
+func (u *User) GetReferCodes(db *gorm.DB) (codes []ReferralCode, err error) {
+	err = db.Debug().Model(&ReferralCode{}).Where("`from` = ? ", u.ID).Find(&codes).Error
 	return codes, err
 }
 
+// generate referral code
 func (u *User) CreateReferCode(db *gorm.DB) error {
 
 	code := utils.RandStringBytesMask(5)
@@ -104,10 +118,11 @@ func (u *User) CreateReferCode(db *gorm.DB) error {
 	return err
 }
 
-type LoginLog struct {
-	ID uint `gorm:"primarykey"`
+// get users avatar by ids
+func (u *User) GetUsersAvatar(db *gorm.DB, ids []uint) []IUser {
+	iu := []IUser{}
 
-	UserId uint `json:"user_id"`
+	db.Find(&iu, "id in ?", ids)
 
-	*gorm.Model
+	return iu
 }

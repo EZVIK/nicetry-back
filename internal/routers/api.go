@@ -2,6 +2,7 @@ package routers
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"go.uber.org/ratelimit"
 	"nicetry/global"
 	"nicetry/internal/controller"
@@ -29,40 +30,47 @@ func InitFiber(app *fiber.App) {
 		MaxAge:        3600,
 	})
 
-	api := app.Group("/api/v1")
-
 	//api.Use(limiter.Take())
 	app.Use(middleware.CORS())
 
-	app.Use(middleware.NewRecover())
+	corsConfig := cors.ConfigDefault
+	corsConfig.AllowOrigins = "*"
+	corsConfig.AllowHeaders = "Authorization, token, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, accept, origin, Cache-Control, X-Requested-With"
+	app.Use(cors.New(corsConfig))
+
+	//app.Use(middleware.NewRecover())
+	api := app.Group("/api/v1")
 
 	api.Post("/upload", uploadLimit.Take(), ctr.UploadImage)
 
-	// User
+	// Group
 	user := api.Group("user")
+	nice := api.Group("nice", jwt)
+	like := api.Group("like", jwt)
+	comment := api.Group("comment", jwt)
+	tag := api.Group("tag", jwt)
+
+	// User
 	user.Post("/login", ctr.Login)
 	user.Post("/register", ctr.Register)
 	user.Post("/", ctr.GetUsers)
+	user.Get("/rf", ctr.GetReferralCode)
 
 	// Nice
-	nice := api.Group("nice")
-	nice.Get("/:id", jwt, ctr.GetNice)
-	nice.Get("/", jwt, ctr.GetNicelist)
-	nice.Put("/:id", jwt, ctr.UpdateNice)
-	nice.Delete("/:id", jwt, ctr.DeleteNice)
-	nice.Post("/", jwt, ctr.AddNice)
+	nice.Get("/:id", ctr.GetNice)
+	nice.Get("/", ctr.GetNicelist)
+	nice.Put("/:id", ctr.UpdateNice)
+	nice.Delete("/:id", ctr.DeleteNice)
+	nice.Post("/", ctr.AddNice)
 
 	// Like
-	like := api.Group("like")
 	like.Post("/", ctr.Like)
 
 	// Comment
-	comment := api.Group("comment")
 	comment.Get("/:id", ctr.GetComments)
 	comment.Post("/", ctr.AddComment)
 
 	// Tag
-	tag := api.Group("tag")
 	tag.Get("/:id", ctr.GetTag)
 	tag.Post("/", ctr.AddTag)
 	tag.Delete("/:id", ctr.DeleteTag)

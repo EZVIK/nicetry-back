@@ -44,6 +44,7 @@ func init() {
 }
 
 func main() {
+
 	fSetting := fiber.Config{
 		ReadTimeout:  global.ServerSetting.ReadTimeout,
 		WriteTimeout: global.ServerSetting.WriteTimeout,
@@ -51,6 +52,7 @@ func main() {
 	app := fiber.New(fSetting)
 
 	routers.InitFiber(app)
+
 	app.Listen(":6079")
 }
 

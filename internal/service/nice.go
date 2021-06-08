@@ -22,6 +22,7 @@ func (s *Service) GetNice(id string) (model.Nice, error) {
 	}
 
 	nice.Comments = comm
+
 	go nice.ViewAdd(s.Dao.DB)
 	return nice, err
 }

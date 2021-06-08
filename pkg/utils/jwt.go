@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gofiber/fiber/v2"
 	"time"
 )
 
@@ -49,7 +50,12 @@ func ParseToken(token string) (*Claims, error) {
 	return nil, err
 }
 
-func GetUserIdFromToken(token string) (userId uint) {
+func GetUserIdFromToken(ctx *fiber.Ctx) (userId uint) {
+
+	token := ctx.Get("Authorization")
+	if token == "" {
+		return 0
+	}
 
 	c, err := ParseToken(token)
 

@@ -80,9 +80,11 @@ func (n *Nice) Get(db *gorm.DB) error {
 	return err
 }
 
+// get list
 func (n *Nice) Gets(db *gorm.DB, column, value string, pageSize int, pageIndex int) (nl []Nice, err error) {
 
 	err = db.Debug().Scopes(Paginate(pageIndex, pageSize)).Model(&Nice{}).
+		Order("updated_at DESC").
 		Preload("User").
 		Preload("Tags").Find(&nl).
 		Error

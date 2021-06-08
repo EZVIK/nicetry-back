@@ -17,12 +17,8 @@ func (s *Controller) Like(ctx *fiber.Ctx) error {
 	if err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}
-	token := ctx.Get("token")
-	userId := utils.GetUserIdFromToken(token)
 
-	if userId == 0 {
-		return ctx.JSON(app.NewErr(e.UserIDParseError))
-	}
+	userId := utils.GetUserIdFromToken(ctx)
 
 	err = s.Service.Like(n.PostId, n.LikeType, userId)
 

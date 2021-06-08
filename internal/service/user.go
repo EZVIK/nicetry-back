@@ -130,3 +130,18 @@ func (s *Service) GetUser(ids []uint) (us []model.User, err error) {
 	}
 	return
 }
+
+func (s *Service) GetReferralCode(id uint) (rf []model.ReferralCode, err error) {
+
+	u := model.User{ID: id}
+	rf, err = u.GetReferCodes(s.Dao.DB)
+	if err != nil {
+		return rf, err
+	}
+	return
+}
+
+func (s *Service) GetUsersAvatar(ids []uint) ([]model.IUser, error) {
+	u := model.User{}
+	return u.GetUsersAvatar(s.Dao.DB, ids), nil
+}

@@ -5,6 +5,7 @@ import (
 	"nicetry/internal/model/dto"
 	"nicetry/pkg/app"
 	"nicetry/pkg/e"
+	"nicetry/pkg/utils"
 )
 
 func (c *Controller) Login(ctx *fiber.Ctx) error {
@@ -55,4 +56,17 @@ func (c *Controller) GetUsers(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.JSON(app.NewRes(user))
+}
+
+// 获取用户推荐码
+func (c *Controller) GetReferralCode(ctx *fiber.Ctx) error {
+
+	userId := utils.GetUserIdFromToken(ctx)
+
+	rf, err := c.Service.GetReferralCode(userId)
+	if err != nil {
+		return ctx.JSON(app.NewErr(e.ERROR_GET_USER_FAIL))
+	}
+
+	return ctx.JSON(app.NewRes(rf))
 }

@@ -14,7 +14,7 @@ func JWT() func(c *fiber.Ctx) error {
 		var code int
 
 		code = e.SUCCESS
-		token := c.Get("token")
+		token := c.Get("Authorization")
 		if token == "" {
 			code = e.INVALID_PARAMS
 		} else {
@@ -30,10 +30,7 @@ func JWT() func(c *fiber.Ctx) error {
 		}
 
 		if code != e.SUCCESS {
-			//c.JSON(app.NewErrRes(http.StatusUnauthorized,e.GetMsg(e.INVALID_PARAMS), ""))
-			//c.Abort()
 			return c.JSON(app.NewErr(e.UnauthorizedTokenError))
-
 		}
 
 		c.Next()

@@ -1,19 +1,17 @@
 package dto
 
 type LoginParams struct {
-	Mail 				string 		`validate:"required" json:"mail"`
-	Password     		string 		`validate:"required" json:"password"`
+	Mail     string `validate:"required" json:"mail"`
+	Password string `validate:"required" json:"password"`
 }
 
-
 type RegisterParams struct {
-	Nickname  			string 		`validate:"required" json:"nickname"`
-	Mail 				string 		`validate:"required" json:"mail"`
-	Password     		string 		`validate:"required" json:"password"`
-	ReferralCode		string		`validate:"required" json:"referral_code"`
+	Nickname     string `validate:"required" json:"nickname"`
+	Mail         string `validate:"required" json:"mail"`
+	Password     string `validate:"required" json:"password"`
+	ReferralCode string `validate:"required" json:"referral_code"`
 }
 
 type IUsers struct {
-	Ids			[]uint		`validate:"required" json:"ids"`
+	Ids []uint `validate:"required" json:"ids"`
 }
-
