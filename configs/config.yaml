@@ -11,10 +11,10 @@ App:
   LogFileExt: .log
 Database:
   DBType: mysql
-  Username: root
-  Password: 123.MDZZ.zzk
-  Host: www.ezvik.com:5588
-  DBName: nicetry_
+  Username:  
+  Password:  
+  Host:  
+  DBName:  
   TablePrefix:
   Charset: utf8
   ParseTime: True
