@@ -4,27 +4,49 @@ import (
 	"errors"
 	"nicetry/internal/model"
 	"nicetry/pkg/utils"
+	"strconv"
 )
 
-func (s *Service) GetNice(id string) (model.Nice, error) {
+func (s *Service) GetNice(id string) (map[string]interface{}, error) {
 	d := s.Dao.DB
 	nice := model.Nice{NoNumber: id}
 
-	//if err := nice.Get(d.Preload("User").Preload("Tag")); err != nil {
-
 	if err := nice.Get(d.Where("no_number = ?", id).Preload("User").Preload("Tags")); err != nil {
-		return model.Nice{}, err
+		return map[string]interface{}{}, err
 	}
 
+	// Get comments
 	comm, err := nice.GetComments(d)
 	if err != nil {
-		return model.Nice{}, err
+		return map[string]interface{}{}, err
 	}
-
 	nice.Comments = comm
 
+	// view +1
 	go nice.ViewAdd(s.Dao.DB)
-	return nice, err
+
+	// get commnents create user id and avatar uri
+	ids := []uint{}
+	for _, comment := range nice.Comments {
+		ids = append(ids, comment.UserId)
+	}
+
+	iUsers, _ := s.GetUsersAvatar(ids)
+
+	// result map
+	userInfo := make(map[string]interface{})
+
+	// turn struct to map[string]interface
+	st := utils.ToMap(nice)
+
+	// adds userinfo
+	for _, k := range iUsers {
+		userInfo[strconv.Itoa(int(k.ID))] = k
+	}
+
+	st["userInfo"] = userInfo
+
+	return st, err
 }
 
 func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int) (ns []model.Nice, err error) {
