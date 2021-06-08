@@ -53,7 +53,7 @@ func main() {
 
 	routers.InitFiber(app)
 
-	app.Listen(":6079")
+	app.Listen(":" + global.ServerSetting.HttpPort)
 }
 
 func setupSetting() error {
