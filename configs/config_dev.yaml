@@ -17,10 +17,10 @@ App:
   IfCheckLike: false
 Database:
   DBType: mysql
-  Username: rxbol
-  Password: -MKBHD828no
-  Host: 159.75.82.148:5588
-  DBName: nicetry_
+  Username:
+  Password:
+  Host:
+  DBName:
   TablePrefix:
   Charset: utf8
   ParseTime: True
@@ -28,6 +28,6 @@ Database:
   MaxOpenConns: 30
 Cache:
   DBType: redis
-  Username: root
-  Password: vzzKh56tGcSGRJ4FJKXQVvSkG8oSREw9cLay598i2bzvz8xccUxBdG7FuRZeVzcfkdKbdhP2RPavmYR5FgmY69FdWJkJCroYLEVAWrZcA3P38iaRQcKT8399aR868qyh
-  Host: 159.75.82.148:6379
+  Username:
+  Password:
+  Host:
