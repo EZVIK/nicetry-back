@@ -49,7 +49,7 @@ func (s *Service) GetNice(id string) (map[string]interface{}, error) {
 	return st, err
 }
 
-func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int) (ns []model.Nice, err error) {
+func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int) (ns []model.NiceList, err error) {
 
 	if pageIndex == 0 {
 		pageIndex = 1

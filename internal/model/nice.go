@@ -38,11 +38,7 @@ type Nice struct {
 type NiceList struct {
 	NoNumber string `json:"no_number"`
 	Title    string `json:"title"`
-	Avatar   string `json:"avatar"`
-	Tag      []Tag  `json:"tags"`
-	ThumbsUp uint   `json:"thumbs_up"`
-	User     IUser  `json:"user"`
-	UserId   uint   `json:"user_id"`
+	ThumbsUp int64  `json:"thumbs_up"`
 }
 
 type NodeType struct {
@@ -52,6 +48,10 @@ type NodeType struct {
 }
 
 func (n *Nice) TableName() string {
+	return "nice"
+}
+
+func (n *NiceList) TableName() string {
 	return "nice"
 }
 
@@ -81,12 +81,11 @@ func (n *Nice) Get(db *gorm.DB) error {
 }
 
 // get list
-func (n *Nice) Gets(db *gorm.DB, column, value string, pageSize int, pageIndex int) (nl []Nice, err error) {
+func (n *Nice) Gets(db *gorm.DB, column, value string, pageSize int, pageIndex int) (nl []NiceList, err error) {
 
-	err = db.Debug().Scopes(Paginate(pageIndex, pageSize)).Model(&Nice{}).
-		Order("updated_at DESC").
-		Preload("User").
-		Preload("Tags").Find(&nl).
+	err = db.Debug().Scopes(Paginate(pageIndex, pageSize)).Model(&NiceList{}).
+		Order("thumbs_up DESC").
+		Find(&nl).
 		Error
 
 		//Where(column + "? = ", value).

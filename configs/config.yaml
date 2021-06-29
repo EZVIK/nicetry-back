@@ -1,6 +1,6 @@
 Server:
   RunMode: debug
-  HttpPort: 8000
+  HttpPort: 6709
   ReadTimeout: 60
   WriteTimeout: 60
 App:
@@ -9,14 +9,25 @@ App:
   LogSavePath: storage/logs
   LogFileName: app
   LogFileExt: .log
+  ImageFilePath: storage/images/
+  ImageMaxSize: 10485760
+  ImageAllowExts: .jpg,.jpeg,.png
+  ImagePrefixUrl: http://localhost:6079/i/
+  ImagePrefix: i/
+  IfCheckLike: false
 Database:
   DBType: mysql
-  Username:  
-  Password:  
-  Host:  
-  DBName:  
+  Username: rxbol
+  Password: -MKBHD828no
+  Host: 159.75.82.148:5588
+  DBName: nicetry_
   TablePrefix:
   Charset: utf8
   ParseTime: True
   MaxIdleConns: 10
   MaxOpenConns: 30
+Cache:
+  DBType: redis
+  Username: root
+  Password: vzzKh56tGcSGRJ4FJKXQVvSkG8oSREw9cLay598i2bzvz8xccUxBdG7FuRZeVzcfkdKbdhP2RPavmYR5FgmY69FdWJkJCroYLEVAWrZcA3P38iaRQcKT8399aR868qyh
+  Host: 159.75.82.148:6379

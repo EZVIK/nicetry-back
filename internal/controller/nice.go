@@ -9,11 +9,15 @@ import (
 )
 
 func (s *Controller) GetNice(ctx *fiber.Ctx) error {
+
 	id := ctx.Params("id")
+
 	nice, err := s.Service.GetNice(id)
+
 	if err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
+
 	return ctx.JSON(app.NewRes(nice))
 }
 

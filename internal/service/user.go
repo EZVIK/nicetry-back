@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
@@ -34,11 +35,19 @@ func (s *Service) Login(mail, password string) (model.User, string, error) {
 
 	// 保存token
 	key := fmt.Sprintf("{USER_AUTH}:%v:", user.ID)
-	if err := s.Dao.Cache.Set(key, token, time.Hour*24).Err(); err != nil {
-		return user, "", err
+	user.Password = ""
+
+	cc := map[string]interface{}{}
+	cc["user"] = user
+	cc["jwt"] = token
+
+	result, err := json.Marshal(cc)
+
+	if err != nil {
+		return model.User{}, "", err
 	}
 
-	user.Password = ""
+	go s.Dao.Cache.Set(key, result, time.Hour*16)
 
 	return user, token, nil
 }
@@ -132,7 +141,6 @@ func (s *Service) GetUser(ids []uint) (us []model.User, err error) {
 }
 
 func (s *Service) GetReferralCode(id uint) (rf []model.ReferralCode, err error) {
-
 	u := model.User{ID: id}
 	rf, err = u.GetReferCodes(s.Dao.DB)
 	if err != nil {

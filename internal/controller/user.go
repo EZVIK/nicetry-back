@@ -8,6 +8,7 @@ import (
 	"nicetry/pkg/utils"
 )
 
+// 登陆
 func (c *Controller) Login(ctx *fiber.Ctx) error {
 
 	n := dto.LoginParams{}
@@ -27,6 +28,7 @@ func (c *Controller) Login(ctx *fiber.Ctx) error {
 	return ctx.JSON(app.NewRes(retData))
 }
 
+// 注册
 func (c *Controller) Register(ctx *fiber.Ctx) error {
 
 	n := dto.RegisterParams{}
