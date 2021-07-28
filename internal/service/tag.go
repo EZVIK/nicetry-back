@@ -17,7 +17,7 @@ func (s *Service) GetTag(id uint) (model.Tag, error) {
 func (s *Service) AddTag(name string, pid uint) error {
 	t := model.Tag{Name: name, ParentId: pid}
 
-	if err := t.Add(s.Dao.DB); err != nil {
+	if err := t.Create(s.Dao.DB); err != nil {
 
 		if strings.Contains(err.Error(), "Duplicate") {
 			return errors.New("标签已存在")

@@ -9,7 +9,7 @@ import (
 	"nicetry/pkg/utils"
 )
 
-func (c *Controller) GetComments(ctx *fiber.Ctx) error {
+func (s *Controller) GetComments(ctx *fiber.Ctx) error {
 	str := convert.StrTo(ctx.Params("id"))
 
 	id, err := str.UInt()
@@ -18,7 +18,7 @@ func (c *Controller) GetComments(ctx *fiber.Ctx) error {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	comments, err := c.Service.GetComments(id)
+	comments, err := s.Service.GetComments(id)
 
 	if err != nil {
 		return err
@@ -27,10 +27,10 @@ func (c *Controller) GetComments(ctx *fiber.Ctx) error {
 	return ctx.JSON(app.NewRes(comments))
 }
 
-func (c *Controller) AddComment(ctx *fiber.Ctx) error {
+func (s *Controller) AddComment(ctx *fiber.Ctx) error {
 	n := dto.CommentAddParams{}
 
-	err := c.BodyParse(ctx, &n)
+	err := s.BodyParse(ctx, &n)
 
 	if err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
@@ -38,7 +38,7 @@ func (c *Controller) AddComment(ctx *fiber.Ctx) error {
 
 	userId := utils.GetUserIdFromToken(ctx)
 
-	err = c.Service.AddComment(n.NiceId, userId, n.Content)
+	err = s.Service.AddComment(n.NiceId, userId, n.Content)
 
 	if err != nil {
 		return err

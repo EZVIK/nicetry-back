@@ -15,17 +15,17 @@ func (s *Service) GetNice(id string) (map[string]interface{}, error) {
 		return map[string]interface{}{}, err
 	}
 
-	// Get comments
+	// 1. Get comments
 	comm, err := nice.GetComments(d)
 	if err != nil {
 		return map[string]interface{}{}, err
 	}
 	nice.Comments = comm
 
-	// view +1
+	// 2. view +1
 	go nice.ViewAdd(s.Dao.DB)
 
-	// get commnents create user id and avatar uri
+	// 3. get comments create user id and avatar uri
 	ids := []uint{}
 	for _, comment := range nice.Comments {
 		ids = append(ids, comment.UserId)
@@ -33,13 +33,11 @@ func (s *Service) GetNice(id string) (map[string]interface{}, error) {
 
 	iUsers, _ := s.GetUsersAvatar(ids)
 
-	// result map
+	// 4. result map
 	userInfo := make(map[string]interface{})
 
-	// turn struct to map[string]interface
+	// 5. turn struct to map[string]interface
 	st := utils.ToMap(nice)
-
-	// adds userinfo
 	for _, k := range iUsers {
 		userInfo[strconv.Itoa(int(k.ID))] = k
 	}
@@ -49,7 +47,7 @@ func (s *Service) GetNice(id string) (map[string]interface{}, error) {
 	return st, err
 }
 
-func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int) (ns []model.NiceList, err error) {
+func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int) (os []model.Nice, err error) {
 
 	if pageIndex == 0 {
 		pageIndex = 1
@@ -58,11 +56,12 @@ func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int)
 		pageSize = 10
 	}
 	n := model.Nice{}
-
-	ns, err = n.Gets(s.Dao.DB, column, value, pageSize, pageIndex)
+	os, err = n.Gets(s.Dao.DB, column, value, pageSize, pageIndex)
+	//o := model.Order{}
+	//os, err = o.Get(s.Dao.DB)
 
 	if err != nil {
-		return ns, err
+		return os, err
 	}
 
 	return
@@ -141,5 +140,5 @@ func (s *Service) LikeNice(postId, likeType, userId uint) error {
 
 	like := model.ThumbsUp{PostId: postId, LikeType: likeType, UserId: userId}
 
-	return like.Add(d)
+	return like.Create(d)
 }

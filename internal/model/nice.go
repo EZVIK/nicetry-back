@@ -6,39 +6,28 @@ import (
 )
 
 type Nice struct {
-	ID uint `gorm:"primarykey"`
-
-	Title string `gorm:"varchar(50);unique" json:"title"` // 标题
-
-	Desc string `gorm:"varchar(200);" json:"desc"` // 详情
-
-	LinkSuffix string `gorm:"varchar(200);" json:"link_suffix"` // 详情
-
-	Content string `gorm:"type:text;" json:"content"` // 内容
-
-	NiceView int64 `gorm:"default:0;" json:"nice_view"` // 被查看数量
-
-	ThumbsUp int64 `gorm:"default:0;" json:"thumbs_up"` // 被点赞数量
-
-	UserId uint `gorm:"index" json:"user_id"` // 创建人
-
-	User IUser `json:"user"` // 创建人
-
-	NiceType uint `gorm:"tinyint(100);" json:"nice_type"` // 类型 0 challenge 1 happy hour
-
-	Tags []Tag `gorm:"many2many:nice_tags;"`
-
-	Comments []Comment `json:"comments"`
-
-	NoNumber string `json:"no_number"`
-
-	*gorm.Model
+	ID         uint      `gorm:"primarykey"`
+	Title      string    `gorm:"varchar(50);unique" json:"title"`  // 标题
+	Desc       string    `gorm:"varchar(200);" json:"desc"`        // 详情
+	LinkSuffix string    `gorm:"varchar(200);" json:"link_suffix"` // 详情
+	Content    string    `gorm:"type:text;" json:"content"`        // 内容
+	NiceView   int64     `gorm:"default:0;" json:"nice_view"`      // 被查看数量
+	ThumbsUp   int64     `gorm:"default:0;" json:"thumbs_up"`      // 被点赞数量
+	UserId     uint      //`gorm:"index" json:"user_id"` 					// 创建人
+	User       User      //`gorm:"index" json:"user"` 				// 创建人
+	NiceType   uint      `gorm:"tinyint(100);" json:"nice_type"` // 类型 0 challenge 1 happy hour
+	Tags       []Tag     `gorm:"many2many:nice_tags;"`
+	Comments   []Comment `json:"comments"`
+	NoNumber   string    `json:"no_number"`
+	gorm.Model
 }
 
-type NiceList struct {
+type INice struct {
+	ID       uint   `gorm:"primarykey"`
 	NoNumber string `json:"no_number"`
 	Title    string `json:"title"`
 	ThumbsUp int64  `json:"thumbs_up"`
+	UserID   IUser  `json:"user_id"`
 }
 
 type NodeType struct {
@@ -51,7 +40,7 @@ func (n *Nice) TableName() string {
 	return "nice"
 }
 
-func (n *NiceList) TableName() string {
+func (n *INice) TableName() string {
 	return "nice"
 }
 
@@ -80,19 +69,27 @@ func (n *Nice) Get(db *gorm.DB) error {
 	return err
 }
 
-// get list
-func (n *Nice) Gets(db *gorm.DB, column, value string, pageSize int, pageIndex int) (nl []NiceList, err error) {
+// Gets get list
+func (n *Nice) Gets(db *gorm.DB, column, value string, pageSize int, pageIndex int) (nl []Nice, err error) {
 
-	err = db.Debug().Scopes(Paginate(pageIndex, pageSize)).Model(&NiceList{}).
-		Order("thumbs_up DESC").
-		Find(&nl).
-		Error
+	err = db.Debug().
+		Preload("User").
+		Preload("Tags").
+		Select("id, no_number, title, nice_view, thumbs_up, user_id, created_at, updated_at").
+		Find(&nl).Error
 
-		//Where(column + "? = ", value).
-		//Select("no_number, title, nice_view, thumbs_up, user_id, created_at, updated_at").
-		//Order("nice_view desc, updated_at  desc").
-		//Scan(&nl).
-		//Error
+	// TODO
+	//Scopes(Paginate(pageIndex, pageSize)).
+	//Model(&Nice{}).
+	//Order("thumbs_up DESC").
+	//Find(&nl).
+	//Error
+
+	//Where(column + "? = ", value).
+	//Select("no_number, title, nice_view, thumbs_up, user_id, created_at, updated_at").
+	//Order("nice_view desc, updated_at  desc").
+	//Scan(&nl).
+	//Error
 
 	if err != nil {
 		return nil, err

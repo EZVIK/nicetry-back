@@ -28,7 +28,7 @@ func (t *Tag) Get(db *gorm.DB) error {
 	return db.Model(&t).Error
 }
 
-func (t *Tag) Add(db *gorm.DB) error {
+func (t *Tag) Create(db *gorm.DB) error {
 	return db.Create(&t).Error
 }
 

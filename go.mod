@@ -12,7 +12,6 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/edwingeng/doublejump v0.0.0-20200330080233-e4ea8bd1cbed // indirect
 	github.com/fatih/color v1.12.0 // indirect
-	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-errors/errors v1.4.0 // indirect
 	github.com/go-ini/ini v1.62.0
 	github.com/go-ping/ping v0.0.0-20210506233800-ff8be3320020 // indirect
@@ -27,6 +26,7 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/grandcat/zeroconf v1.0.0 // indirect
+	github.com/guonaihong/gout v0.2.1
 	github.com/hashicorp/consul/api v1.8.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
@@ -41,14 +41,12 @@ require (
 	github.com/klauspost/reedsolomon v1.9.12 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
 	github.com/miekg/dns v1.1.42 // indirect
-	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	github.com/mozillazg/go-httpheader v0.3.0 // indirect
 	github.com/nacos-group/nacos-sdk-go v1.0.7 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/pelletier/go-toml v1.9.0 // indirect
-	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/rpcx-ecosystem/rpcx-demo v0.0.0-20190320061611-3433efba21fc
 	github.com/samuel/go-zookeeper v0.0.0-20201211165307-7117e9ea2414 // indirect
 	github.com/smallnest/quick v0.0.0-20210406061658-4bf95e372fbd // indirect
@@ -72,7 +70,7 @@ require (
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
 	golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea // indirect
-	golang.org/x/text v0.3.6 // indirect
+	golang.org/x/text v0.3.6
 	gopkg.in/errgo.v2 v2.1.0
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0

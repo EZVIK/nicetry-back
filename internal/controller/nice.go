@@ -53,15 +53,15 @@ func (s *Controller) DeleteNice(ctx *fiber.Ctx) error {
 	return ctx.JSON(app.NewRes(id + " deleted."))
 }
 
-func (c *Controller) GetNicelist(ctx *fiber.Ctx) error {
+func (s *Controller) GetNicelist(ctx *fiber.Ctx) error {
 
 	n := dto.NiceListParams{}
 
-	if err := c.BodyParse(ctx, &n); err != nil {
+	if err := s.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}
 
-	niceList, err := c.Service.GetNiceList("", "", n.PageSize, n.PageIndex)
+	niceList, err := s.Service.GetNiceList("", "", n.PageSize, n.PageIndex)
 	if err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}

@@ -29,7 +29,7 @@ func (s *Service) Like(postId, likeType, userId uint) error {
 		return err
 	}
 
-	if err := thumbsUp.Add(d); err != nil {
+	if err := thumbsUp.Create(d); err != nil {
 		return err
 	}
 

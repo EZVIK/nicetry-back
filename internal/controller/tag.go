@@ -7,43 +7,41 @@ import (
 	"nicetry/pkg/e"
 )
 
-func (c *Controller) GetTag(ctx *fiber.Ctx) error {
+func (s *Controller) GetTag(ctx *fiber.Ctx) error {
 
-	id, err := c.GetParamUint(ctx, "id")
+	id, err := s.GetParamUint(ctx, "id")
 	if err != nil {
-	    return ctx.JSON(app.NewErr(e.InvalidParams))
+		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	t, err := c.Service.GetTag(id)
+	t, err := s.Service.GetTag(id)
 
 	return ctx.JSON(app.NewRes(t))
 }
 
-
-func (c *Controller) AddTag(ctx *fiber.Ctx) error {
+func (s *Controller) AddTag(ctx *fiber.Ctx) error {
 
 	n := dto.TagAddParams{}
 
-	if err := c.BodyParse(ctx, &n); err != nil {
+	if err := s.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}
 
-	if err := c.Service.AddTag(n.Name, n.ParentId); err != nil {
+	if err := s.Service.AddTag(n.Name, n.ParentId); err != nil {
 		return ctx.JSON(app.NewErrRes(e.INVALID_PARAMS, e.GetMsg(e.INVALID_PARAMS), err.Error()))
 	}
 
 	return ctx.JSON(app.NewRes(""))
 }
 
+func (s *Controller) DeleteTag(ctx *fiber.Ctx) error {
 
-func (c *Controller) DeleteTag(ctx *fiber.Ctx) error {
-
-	id, err := c.GetParamUint(ctx, "id")
+	id, err := s.GetParamUint(ctx, "id")
 	if err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	t, err := c.Service.GetTag(id)
+	t, err := s.Service.GetTag(id)
 
 	return ctx.JSON(app.NewRes(t))
 }

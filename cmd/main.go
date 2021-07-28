@@ -13,6 +13,20 @@ import (
 	"time"
 )
 
+func main() {
+
+	fSetting := fiber.Config{
+		ReadTimeout:  global.ServerSetting.ReadTimeout,
+		WriteTimeout: global.ServerSetting.WriteTimeout,
+	}
+
+	app := fiber.New(fSetting)
+
+	routers.InitFiber(app)
+
+	app.Listen(":" + global.ServerSetting.HttpPort)
+}
+
 // 组建初始化
 func init() {
 	log.Println("Initializing...\n")
@@ -41,19 +55,6 @@ func init() {
 	}
 	fmt.Println("Finished.\n")
 	//global.Logger.Infof("%s: nicetry/%s", "ezvik", "blog-service")
-}
-
-func main() {
-
-	fSetting := fiber.Config{
-		ReadTimeout:  global.ServerSetting.ReadTimeout,
-		WriteTimeout: global.ServerSetting.WriteTimeout,
-	}
-	app := fiber.New(fSetting)
-
-	routers.InitFiber(app)
-
-	app.Listen(":" + global.ServerSetting.HttpPort)
 }
 
 func setupSetting() error {

@@ -9,14 +9,14 @@ import (
 )
 
 // 登陆
-func (c *Controller) Login(ctx *fiber.Ctx) error {
+func (s *Controller) Login(ctx *fiber.Ctx) error {
 
 	n := dto.LoginParams{}
-	if err := c.BodyParse(ctx, &n); err != nil {
+	if err := s.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	user, token, err := c.Service.Login(n.Mail, n.Password)
+	user, token, err := s.Service.Login(n.Mail, n.Password)
 
 	if err != nil || token == "" {
 		return ctx.JSON(app.NewErr(e.UnauthorizedFail))
@@ -29,15 +29,15 @@ func (c *Controller) Login(ctx *fiber.Ctx) error {
 }
 
 // 注册
-func (c *Controller) Register(ctx *fiber.Ctx) error {
+func (s *Controller) Register(ctx *fiber.Ctx) error {
 
 	n := dto.RegisterParams{}
 
-	if err := c.BodyParse(ctx, &n); err != nil {
+	if err := s.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	if err := c.Service.Register(n.ReferralCode, n.Nickname, n.Password, n.Mail, "-", "-", "-"); err != nil {
+	if err := s.Service.Register(n.ReferralCode, n.Nickname, n.Password, n.Mail, "-", "-", "-"); err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
@@ -45,14 +45,14 @@ func (c *Controller) Register(ctx *fiber.Ctx) error {
 }
 
 // 获取用户信息
-func (c *Controller) GetUsers(ctx *fiber.Ctx) error {
+func (s *Controller) GetUsers(ctx *fiber.Ctx) error {
 
 	n := dto.IUsers{}
-	if err := c.BodyParse(ctx, &n); err != nil {
+	if err := s.BodyParse(ctx, &n); err != nil {
 		return ctx.JSON(app.NewErr(e.InvalidParams))
 	}
 
-	user, err := c.Service.GetUser(n.Ids)
+	user, err := s.Service.GetUser(n.Ids)
 	if err != nil {
 		return ctx.JSON(app.NewErr(e.ERROR_GET_USER_FAIL))
 	}
@@ -61,11 +61,11 @@ func (c *Controller) GetUsers(ctx *fiber.Ctx) error {
 }
 
 // 获取用户推荐码
-func (c *Controller) GetReferralCode(ctx *fiber.Ctx) error {
+func (s *Controller) GetReferralCode(ctx *fiber.Ctx) error {
 
 	userId := utils.GetUserIdFromToken(ctx)
 
-	rf, err := c.Service.GetReferralCode(userId)
+	rf, err := s.Service.GetReferralCode(userId)
 	if err != nil {
 		return ctx.JSON(app.NewErr(e.ERROR_GET_USER_FAIL))
 	}

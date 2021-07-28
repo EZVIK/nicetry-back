@@ -10,16 +10,17 @@ import (
 )
 
 type LoginLog struct {
-	ID     uint `gorm:"primarykey"`
+	ID     uint `gorm:"primary_key"`
 	UserId uint `json:"user_id"`
 	*gorm.Model
 }
 
 type IUser struct {
-	ID       uint   `gorm:"primarykey"`
+	//ID       uint   `gorm:"primary_key"`
 	Mail     string `gorm:"varchar;unique" json:"mail"`
 	Nickname string `gorm:"varchar;" json:"nickname"`
 	Avatar   string `gorm:"varchar;" json:"avatar"`
+	gorm.Model
 }
 
 type User struct {
@@ -86,23 +87,23 @@ func (u *User) Token(r *redis.Client, token string) error {
 	return r.Set(GetCachePreName(u), token, time.Hour*36).Err()
 }
 
-// get likes record
+// GetLikes get likes record
 func (u *User) GetLikes(db *gorm.DB) (ls []ThumbsUp, err error) {
 	return nil, nil
 }
 
-// get points record
+// GetPoints get points record
 func (u *User) GetPoints(db *gorm.DB) (p int64, err error) {
 	return 0, nil
 }
 
-// get referral_code list
+// GetReferCodes get referral_code list
 func (u *User) GetReferCodes(db *gorm.DB) (codes []ReferralCode, err error) {
 	err = db.Debug().Model(&ReferralCode{}).Where("`from` = ? ", u.ID).Find(&codes).Error
 	return codes, err
 }
 
-// generate referral code
+// CreateReferCode generate referral code
 func (u *User) CreateReferCode(db *gorm.DB) error {
 
 	code := utils.RandStringBytesMask(5)
@@ -118,7 +119,7 @@ func (u *User) CreateReferCode(db *gorm.DB) error {
 	return err
 }
 
-// get users avatar by ids
+// GetUsersAvatar get users avatar by ids
 func (u *User) GetUsersAvatar(db *gorm.DB, ids []uint) []IUser {
 	iu := []IUser{}
 

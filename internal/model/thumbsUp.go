@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis/v7"
 	"gorm.io/gorm"
 	"nicetry/global"
+	"nicetry/internal/dao"
 )
 
 type ThumbsUp struct {
@@ -20,11 +21,7 @@ type ThumbsUp struct {
 	*gorm.Model
 }
 
-type ThumbsUp_ interface {
-	LikeAdd(db *gorm.DB) error
-}
-
-func (l *ThumbsUp) Like(t ThumbsUp_, db *gorm.DB, cache *redis.Client) error {
+func (l *ThumbsUp) Like(t dao.ThumbsUp_, db *gorm.DB, cache *redis.Client) error {
 
 	key := ""
 	if l.LikeType == 1 {
@@ -48,23 +45,20 @@ func (l *ThumbsUp) Like(t ThumbsUp_, db *gorm.DB, cache *redis.Client) error {
 	return nil
 }
 
-// 获取POST 对象
-func (l *ThumbsUp) GetPost(db *gorm.DB) (tu ThumbsUp_, err error) {
+// GetPost 获取POST 对象
+func (l *ThumbsUp) GetPost(db *gorm.DB) (t dao.ThumbsUp_, err error) {
 
 	if l.LikeType == 1 {
-		s := &Nice{}
-		err = db.Model(s).First(&s, l.PostId).Error
-		return s, err
+		err = db.Model(t).First(&t, l.PostId).Error
+		return
 	} else if l.LikeType == 2 {
-		s := &Comment{}
-		err = db.Model(s).First(&s, l.PostId).Error
-		return s, err
+		err = db.Model(t).First(&t, l.PostId).Error
+		return
 	}
-
 	return
 }
 
-func (l *ThumbsUp) Add(db *gorm.DB) error {
+func (l *ThumbsUp) Create(db *gorm.DB) error {
 	return db.Create(&l).Error
 }
 

@@ -24,9 +24,8 @@ func New() *Controller {
 	return &ctrl
 }
 
-/***
-dto 参数解析
-*/
+// BodyParse
+// parse request body to dto
 func (s *Controller) BodyParse(ctx *fiber.Ctx, dto interface{}) error {
 	_ = ctx.BodyParser(dto)                 // 解析参数
 	validateError := s.Validate.Struct(dto) // 校验参数
@@ -37,7 +36,9 @@ func (s *Controller) BodyParse(ctx *fiber.Ctx, dto interface{}) error {
 	return nil
 }
 
-func (c *Controller) GetParamUint(ctx *fiber.Ctx, key string) (uint, error) {
+// GetParamUint
+// string to uint
+func (s *Controller) GetParamUint(ctx *fiber.Ctx, key string) (uint, error) {
 	str := convert.StrTo(ctx.Params(key))
 	id, err := str.UInt()
 	if err != nil {

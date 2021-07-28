@@ -1,5 +1,5 @@
 /storage/
 ./configs/config.yaml
-test/
 storage
 .idea
+/test/base/rpcx/

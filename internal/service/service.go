@@ -1,12 +1,10 @@
 package service
 
 import (
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"gopkg.in/errgo.v2/errors"
 	"nicetry/internal/dao"
 	"nicetry/pkg/app"
-	"time"
 )
 
 type Service struct {
@@ -23,8 +21,11 @@ func (s *Service) HandlerException(ctx *fiber.Ctx, err error) bool {
 
 		switch cause.(type) {
 		default:
-			fmt.Println(time.Now().Format("2006-01-02 15:04:05"), " = ", err)
-			ctx.JSON(app.NewErrRes(500, "Server Internal ERROR.", cause.Error()))
+			//fmt.Println(time.Now().Format("2006-01-02 15:04:05"), " = ", err)
+			err := ctx.JSON(app.NewErrRes(500, "Server Internal ERROR.", cause.Error()))
+			if err != nil {
+				return false
+			}
 		}
 		return true
 	}

@@ -15,6 +15,6 @@ func (n *Comment) LikeAdd(db *gorm.DB) error {
 	return db.Model(&n).Update("thumbs_up", gorm.Expr("thumbs_up + ?", "", 1)).Error
 }
 
-func (n *Comment) Add(db *gorm.DB) error {
+func (n *Comment) Create(db *gorm.DB) error {
 	return db.Create(&n).Error
 }
