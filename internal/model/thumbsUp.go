@@ -25,9 +25,10 @@ func (l *ThumbsUp) Like(t dao.ThumbsUp_, db *gorm.DB, cache *redis.Client) error
 
 	key := ""
 	if l.LikeType == 1 {
-		key = fmt.Sprintf("{USER_COMMENT_LIKES}:%v", l.UserId)
+		//key = fmt.Sprintf("{USER_COMMENT_LIKES}:%v", l.UserId)
+		key = fmt.Sprintf("%v:%v", global.CacheSetting.REDIS_NS_NICE_LIKES, l.UserId)
 	} else {
-		key = fmt.Sprintf("{USER_NICE_LIKES}:%v", l.UserId)
+		key = fmt.Sprintf("%v:%v", global.CacheSetting.REDIS_NS_COMMENT_LIKES, l.UserId)
 	}
 
 	if err := l.Check(cache, key); err != nil {

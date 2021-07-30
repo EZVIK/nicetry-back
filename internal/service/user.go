@@ -3,8 +3,8 @@ package service
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"nicetry/global"
 	"nicetry/internal/model"
 	"nicetry/pkg/utils"
 	"time"
@@ -34,7 +34,7 @@ func (s *Service) Login(mail, password string) (model.User, string, error) {
 	}
 
 	// 保存token
-	key := fmt.Sprintf("{USER_AUTH}:%v:", user.ID)
+	key := global.CacheSetting.REDIS_NS_AUTH
 	user.Password = ""
 
 	cc := map[string]interface{}{}

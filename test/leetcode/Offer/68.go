@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -20,20 +16,20 @@ import (
 
 */
 
-type TreeNode1 struct {
-	Val   int
-	Left  *TreeNode1
-	Right *TreeNode1
-}
+//type TreeNode struct {
+//	Val   int
+//	Left  *TreeNode
+//	Right *TreeNode
+//}
 
-func PreOrderTraversal(node *TreeNode1) {
-	if node == nil {
-		return
-	}
-	fmt.Println(node.Val)
-	PreOrderTraversal(node.Left)
-	PreOrderTraversal(node.Right)
-}
+//func PreOrderTraversal(node *TreeNode) {
+//	if node == nil {
+//		return
+//	}
+//	fmt.Println(node.Val)
+//	PreOrderTraversal(node.Left)
+//	PreOrderTraversal(node.Right)
+//}
 
 func main() {
 

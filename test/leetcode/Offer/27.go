@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -15,11 +11,11 @@ import (
  * 请完成一个函数，输入一个二叉树，该函数输出它的镜像。
  */
 
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
-}
+//type TreeNode struct {
+//	Val   int
+//	Left  *TreeNode
+//	Right *TreeNode
+//}
 
 func mirrorTree(root *TreeNode) *TreeNode {
 	n := root
@@ -51,7 +47,7 @@ func mirrorTree(root *TreeNode) *TreeNode {
 
 func main() {
 
-	l6 := &TreeNode{Val: 9, Left: nil, Right: nil}
+	//l6 := &TreeNode{Val: 9, Left: nil, Right: nil}
 	//l5 := &TreeNode{Val: 6, Left: nil, Right: nil}
 	//l4 := &TreeNode{Val: 3, Left: nil, Right: nil}
 	//l3 := &TreeNode{Val: 1, Left: nil, Right: nil}
@@ -60,7 +56,7 @@ func main() {
 	//root := &TreeNode{Val: 4, Left: l1, Right: l2}
 
 	//n := root
-	mirrorTree(l6)
-
-	fmt.Println("SSD")
+	//mirrorTree(l6)
+	//
+	//fmt.Println("SSD")
 }

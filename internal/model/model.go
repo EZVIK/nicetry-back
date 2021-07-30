@@ -37,6 +37,8 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	sqlDB.SetMaxIdleConns(databaseSetting.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(databaseSetting.MaxOpenConns)
 
+	defer sqlDB.Close()
+
 	return gormClient.Debug(), nil
 }
 
