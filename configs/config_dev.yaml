@@ -12,8 +12,8 @@ App:
   ImageFilePath: storage/images/
   ImageMaxSize: 10485760
   ImageAllowExts: .jpg,.jpeg,.png
-  ImagePrefixUrl: http://localhost:6079/i/
-  ImagePrefix: i/
+  ImagePrefixUrl: http://localhost:6079/FileOp/
+  ImagePrefix: FileOp/
   IfCheckLike: false
 Database:
   DBType: mysql

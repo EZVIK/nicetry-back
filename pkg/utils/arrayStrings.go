@@ -13,9 +13,9 @@ import (
 //
 //	var buffer bytes.Buffer
 //	// 合并标签 为字符串
-//	for i, k := range etype {
+//	for FileOp, k := range etype {
 //		buffer.WriteString(k.key.(string))
-//		if i != len(etype)-1 {
+//		if FileOp != len(etype)-1 {
 //			buffer.WriteString(" ")
 //		}
 //	}

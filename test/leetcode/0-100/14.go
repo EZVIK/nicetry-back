@@ -24,8 +24,8 @@ import (
 提示：
 
 0 <= strs.length <= 200
-0 <= strs[i].length <= 200
-strs[i] 仅由小写英文字母组成
+0 <= strs[FileOp].length <= 200
+strs[FileOp] 仅由小写英文字母组成
 
 */
 func longestCommonPrefix(strs []string) string {

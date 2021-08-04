@@ -9,8 +9,8 @@ import (
 func main() {
 
 	//test1 := make([]int, 0)
-	//for i := 0; i < 8; i++ {
-	//	test1 = append(test1, i)
+	//for FileOp := 0; FileOp < 8; FileOp++ {
+	//	test1 = append(test1, FileOp)
 	//}
 	//fmt.Println(test1, len(test1), cap(test1))
 	//

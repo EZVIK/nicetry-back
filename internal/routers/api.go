@@ -21,7 +21,7 @@ func InitFiber(app *fiber.App) {
 	uploadLimit := middleware.Limiter{RL: ratelimit.New(5)} // request per second
 
 	// 图片访问
-	app.Static("/i", global.AppSetting.ImageFilePath, fiber.Static{
+	app.Static("/FileOp", global.AppSetting.ImageFilePath, fiber.Static{
 		Compress:      true,
 		ByteRange:     true,
 		Browse:        true,

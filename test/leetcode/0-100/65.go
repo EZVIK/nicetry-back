@@ -68,7 +68,7 @@ package main
 //
 //	maxStrNum := int32(2)			//
 //
-//	for i, k := range number {
+//	for FileOp, k := range number {
 //
 //		if ifLegal := dicts[k]; ifLegal == 0 {
 //			return false
@@ -78,7 +78,7 @@ package main
 //		if k < 48 || k > 57 {
 //			allNumber = false
 //			isMutiStr[k][0]++
-//			isMutiStr[k][1] = int32(i)
+//			isMutiStr[k][1] = int32(FileOp)
 //
 //			if isMutiStr[k][0] == maxStrNum {
 //				return false

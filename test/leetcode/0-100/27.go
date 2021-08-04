@@ -18,7 +18,7 @@ import "fmt"
 提示：
 
 0 <= nums.length <= 100
-0 <= nums[i] <= 50
+0 <= nums[FileOp] <= 50
 0 <= val <= 100
 
 */

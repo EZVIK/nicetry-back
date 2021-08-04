@@ -20,10 +20,10 @@ import (
 
 //func twoSum(nums []int, target int) []int {
 //
-//	for i:=0;i< len(nums);i++{
-//		for j:=i+1;j<len(nums);j++{
-//			if nums[i] + nums[j] == target {
-//				return []int{i, j}
+//	for FileOp:=0;FileOp< len(nums);FileOp++{
+//		for j:=FileOp+1;j<len(nums);j++{
+//			if nums[FileOp] + nums[j] == target {
+//				return []int{FileOp, j}
 //			}
 //		}
 //	}

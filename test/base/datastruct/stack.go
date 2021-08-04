@@ -93,7 +93,7 @@ func (s *Stack) Push(item Item) {
 //		}
 //	}
 //
-//	for i:=0;i<num;i++ {
+//	for FileOp:=0;FileOp<num;FileOp++ {
 //		wg.Add(1)
 //		go print()
 //	}

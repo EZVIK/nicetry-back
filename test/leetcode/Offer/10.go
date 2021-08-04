@@ -38,9 +38,9 @@ class Solution {
         int[] dp = new int[n + 1];
         dp[0] = 0;
         dp[1] = 1;
-        for(int i = 2; i <= n; i++){
-            dp[i] = dp[i-1] + dp[i-2];
-            dp[i] %= 1000000007;
+        for(int FileOp = 2; FileOp <= n; FileOp++){
+            dp[FileOp] = dp[FileOp-1] + dp[FileOp-2];
+            dp[FileOp] %= 1000000007;
         }
         return dp[n];
     }
