@@ -5,13 +5,20 @@ import "fmt"
 type Customer struct {
 	ID   int
 	Name string
-	Arr  []int
+	Arr  []tt
+}
+
+type tt struct {
+	ID int
 }
 
 func main() {
-	a := []int{}
-	var c1 interface{} = Customer{ID: 1, Name: "Jack", Arr: a}
-	var c2 interface{} = Customer{ID: 1, Name: "Jack", Arr: a}
-	fmt.Println(c1 == c2)
+	a := new(struct{})
+	b := new(struct{})
+	c := struct{}{}
+	println(a, b, &c, a == b, b == &c)
+	//println(*b == c)
+	fmt.Println(a, b)
+	println(a, b, &c, a == b, b == &c)
 
 }

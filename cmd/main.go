@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"nicetry/global"
@@ -22,9 +23,15 @@ func main() {
 
 	app := fiber.New(fSetting)
 
+	// Default middleware
+	app.Use(pprof.New())
+
 	routers.InitFiber(app)
 
-	app.Listen(":" + global.ServerSetting.HttpPort)
+	err := app.Listen(":" + global.ServerSetting.HttpPort)
+	if err != nil {
+		return
+	}
 }
 
 // 组建初始化

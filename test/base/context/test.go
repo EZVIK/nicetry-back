@@ -47,6 +47,7 @@ type SHIT struct {
 func (this *SHIT) String() string {
 	return fmt.Sprint(this.ID, this.NAME, this.AGE, this.DESC)
 }
+
 func main() {
 
 	type favContextKey string

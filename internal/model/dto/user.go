@@ -15,3 +15,7 @@ type RegisterParams struct {
 type IUsers struct {
 	Ids []uint `validate:"required" json:"ids"`
 }
+
+type ValidateToken struct {
+	Token string `validate:"required" json:"token"`
+}

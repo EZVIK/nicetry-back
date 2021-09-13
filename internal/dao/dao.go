@@ -14,11 +14,6 @@ type Repository interface {
 	Update(db *gorm.DB) error
 	Delete(db *gorm.DB) error
 	Get(db *gorm.DB) error
-
-	//Gets(db *gorm.DB, column, value string, pageSize int, pageIndex int) (nl []model.NiceList, err error)
-	//ViewAdd(db *gorm.DB) error
-	//GetComments(db *gorm.DB) (cos []model.Comment, err error)
-	//GetNiceTags(db *gorm.DB) (tags []model.Tag, err error)
 }
 
 type Dao struct {

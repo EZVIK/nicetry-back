@@ -69,18 +69,19 @@ func (s *Service) GetNiceList(column, value string, pageSize int, pageIndex int)
 
 func (s *Service) AddNice(Title, Desc, Content string, UserId, NiceType uint, tags []uint) (model.Nice, error) {
 
+	// start a transactions
 	tx := s.Dao.BeginTx()
 	defer func() {
 		tx.Commit()
 	}()
 
-	nice_check := model.Nice{
+	niceCheck := model.Nice{
 		Title: Title,
 	}
 
-	if err := nice_check.Get(tx.Where("title = ?", nice_check.Title)); err != nil && err.Error() != "record not found" {
+	if err := niceCheck.Get(tx.Where("title = ?", niceCheck.Title)); err != nil && err.Error() != "record not found" {
 		return model.Nice{}, err
-	} else if nice_check.ID != 0 {
+	} else if niceCheck.ID != 0 {
 		return model.Nice{}, errors.New("标题该已存在")
 	}
 
@@ -94,12 +95,13 @@ func (s *Service) AddNice(Title, Desc, Content string, UserId, NiceType uint, ta
 		NoNumber: utils.GetNoNumber(Title),
 	}
 
+	// TODO middleware
 	if err := nice.Create(tx); err != nil {
 		tx.Rollback()
 		return model.Nice{}, err
 	}
 
-	nts := []model.NiceTag{}
+	var nts []model.NiceTag = make([]model.NiceTag, len(tags))
 	for _, k := range tags {
 		nts = append(nts, model.NiceTag{TagID: k, NiceID: nice.ID})
 	}

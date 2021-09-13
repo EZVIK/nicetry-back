@@ -11,9 +11,12 @@ require (
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/gofiber/fiber/v2 v2.7.1
 	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/gomarkdown/markdown v0.0.0-20210514010506-3b9f47219fe7 // indirect
+	github.com/gomarkdown/mdtohtml v0.0.0-20180202094705-7346712f31b4 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/guonaihong/gout v0.2.1
+	github.com/imroc/req v0.3.0 // indirect
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect

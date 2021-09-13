@@ -33,10 +33,86 @@ func main() {
 
 	// 40 41, 123 125, 91 93
 	//isValid("(){}[]")
+	//fmt.Println(isValid3("({{}})"))
+	//fmt.Println(f(106))
+	fmt.Println(fuck(6))
+}
 
-	// 						{
-	fmt.Println(isValid("({){})"))
-	//fmt.Println(isValid("(){}[]"))
+var CostRate = []int{5, 20, 50, 100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 6001}
+var CostWeight = []int{30, 15, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
+
+func fuck(a int) int {
+	sum := 0
+	index := 0
+	for i := len(CostRate) - 1; i >= 0; i-- {
+		if a >= CostRate[i] {
+			index = i
+			break
+		}
+	}
+	sum += ans(index)
+	sum += (a - CostRate[index]) * CostWeight[index+1]
+	return sum
+}
+
+func ans(index int) int {
+	if index == 0 {
+		return CostRate[index] * CostWeight[index]
+	}
+	return ans(index-1) + CostRate[index]*CostWeight[index]
+}
+
+func isValid3(s string) bool {
+	if len(s) == 0 {
+		return true
+	}
+
+	brackets := map[byte]byte{')': '(', ']': '[', '}': '{'}
+	checkArr := make([]byte, 0, len(s))
+
+	for _, v := range s {
+		if _, ok := brackets[byte(v)]; ok {
+
+			if brackets[byte(v)] != checkArr[len(checkArr)-1] {
+				return false
+			}
+
+			checkArr = checkArr[:len(checkArr)-1]
+		} else {
+			checkArr = append(checkArr, byte(v))
+		}
+	}
+
+	if len(checkArr) != 0 {
+		return false
+	}
+
+	return true
+
+}
+
+func isValid2(s string) bool {
+
+	if s == "" {
+		return true
+	}
+
+	checkMap := map[byte]byte{')': '(', ']': '[', '}': '{'}
+	checkStack := make([]byte, 0, len(s))
+
+	for i := 0; i < len(s); i++ {
+
+		if s[i] == '(' || s[i] == '[' || s[i] == '{' {
+			checkStack = append(checkStack, s[i])
+		} else {
+			if checkStack[len(checkStack)-1] != checkMap[s[i]] {
+				return false
+			}
+			checkStack = checkStack[:len(checkStack)-1]
+		}
+	}
+
+	return len(checkStack) == 0
 
 }
 
@@ -80,33 +156,6 @@ func isValid(s string) bool {
 	}
 
 	return false
-}
-
-func isValid2(s string) bool {
-
-	if s == "" {
-		return true
-	}
-
-	checkMap := map[byte]byte{')': '(', ']': '[', '}': '{'}
-	checkStack := make([]byte, 0, len(s))
-
-	for i := 0; i < len(s); i++ {
-		if s[i] == '(' || s[i] == '[' || s[i] == '{' {
-			checkStack = append(checkStack, s[i])
-		} else {
-			if len(checkStack) == 0 {
-				return false
-			}
-			if checkStack[len(checkStack)-1] != checkMap[s[i]] {
-				return false
-			} //if>>>
-			checkStack = checkStack[:len(checkStack)-1]
-		} //else>>
-	} // for>
-
-	return len(checkStack) == 0
-
 }
 
 func check(last, current byte) int {

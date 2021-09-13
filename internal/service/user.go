@@ -7,6 +7,7 @@ import (
 	"nicetry/global"
 	"nicetry/internal/model"
 	"nicetry/pkg/utils"
+	"strconv"
 	"time"
 )
 
@@ -39,7 +40,6 @@ func (s *Service) Login(mail, password string) (model.User, string, error) {
 
 	cc := map[string]interface{}{}
 	cc["user"] = user
-	cc["jwt"] = token
 
 	result, err := json.Marshal(cc)
 
@@ -47,7 +47,16 @@ func (s *Service) Login(mail, password string) (model.User, string, error) {
 		return model.User{}, "", err
 	}
 
-	go s.Dao.Cache.Set(key, result, time.Hour*16)
+	statusCmd := s.Dao.Cache.Set(key+token, 1, time.Hour*16)
+	if statusCmd.Err() != nil {
+		return user, "", statusCmd.Err()
+	}
+
+	id := utils.EncodeMD5(strconv.Itoa(int(user.ID)))
+	statusCmd = s.Dao.Cache.Set(global.CacheSetting.REDIS_NS_USER_ID+id, result, time.Hour*16)
+	if statusCmd.Err() != nil {
+		return user, "", statusCmd.Err()
+	}
 
 	return user, token, nil
 }

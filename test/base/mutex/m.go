@@ -18,7 +18,6 @@ func main() {
 	var writeOps uint64
 
 	for r := 0; r < 100; r++ {
-
 		go func() {
 			total := 0
 

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"nicetry/global"
 	"nicetry/internal/model/dto"
 	"nicetry/pkg/app"
 	"nicetry/pkg/e"
@@ -26,6 +27,20 @@ func (s *Controller) Login(ctx *fiber.Ctx) error {
 	retData["userInfo"] = user
 	retData["jwt"] = token
 	return ctx.JSON(app.NewRes(retData))
+}
+
+func (s *Controller) ValidateToken(ctx *fiber.Ctx) error {
+	token := ctx.Query("token")
+
+	if _, err := utils.ParseToken(token); err != nil {
+		return ctx.JSON(app.NewErr(e.UnauthorizedTokenError))
+	}
+
+	// TODO Token Service
+	st := s.Service.Dao.Cache.Get(global.CacheSetting.REDIS_NS_AUTH + token)
+	res, _ := st.Result()
+
+	return ctx.JSON(app.NewRes(res))
 }
 
 // 注册

@@ -41,11 +41,12 @@ func InitFiber(app *fiber.App) {
 	//app.Use(middleware.NewRecover())
 	api := app.Group("/api/v1")
 
+	api.Get("/valid", ctr.ValidateToken)
 	api.Post("/upload", uploadLimit.Take(), ctr.UploadImage)
 
 	// Group
 	user := api.Group("user")
-	nice := api.Group("nice", jwt)
+	nice := api.Group("nice")
 	like := api.Group("like", jwt)
 	comment := api.Group("comment", jwt)
 	tag := api.Group("tag", jwt)
@@ -54,7 +55,7 @@ func InitFiber(app *fiber.App) {
 	user.Post("/login", ctr.Login)
 	user.Post("/register", ctr.Register)
 	user.Post("/", ctr.GetUsers)
-	user.Get("/rf", ctr.GetReferralCode)
+	user.Get("/rf", ctr.GetReferralCode, jwt)
 
 	// Nice
 	nice.Get("/:id", ctr.GetNice)
